@@ -1,0 +1,43 @@
+// hide unnecessary files from git
+# Ignore node_modules directory
+node_modules/
+# Ignore build output directory
+dist/
+# Ignore log files
+*.log
+# Ignore environment variable files
+.env
+# Ignore coverage reports
+coverage/
+# Ignore IDE specific files
+.idea/
+# Ignore temporary files
+*.tmp
+# Ignore OS generated files
+.DS_Store
+# Ignore npm debug log files
+npm-debug.log*
+# Ignore yarn lock files
+yarn-debug.log*
+# Ignore package lock files
+package-lock.json
+# Ignore lock files for pnpm
+pnpm-lock.yaml
+# Ignore test output files
+test-output/
+# Ignore documentation output
+docs/
+# Ignore build artifacts
+build/
+# Ignore cache directories
+.cache/
+# Ignore temporary files created by editors
+*.swp
+# Ignore backup files
+*~
+# Ignore coverage reports from Jest
+coverage/
+# Ignore TypeScript declaration files
+*.d.ts
+# Ignore compiled JavaScript files
+*.js
