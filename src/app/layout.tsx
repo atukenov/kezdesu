@@ -1,4 +1,6 @@
+import { AuthProvider } from "@/components/AuthProvider";
 import Navigation from "@/components/Navigation";
+import Notification from "@/components/Notification";
 import type { Metadata } from "next";
 import { Manrope, Source_Sans_3 } from "next/font/google";
 import { Toaster } from "react-hot-toast";
@@ -27,12 +29,12 @@ export default function RootLayout({
           content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
         />
       </head>
-      <body
-        className={`bg-gradient-to-br from-blue-100 to-white font-sans min-h-screen`}
-      >
-        <Navigation />
-        <main className="container mx-auto px-4 py-6">{children}</main>
-        <Toaster position="bottom-center" />
+      <body className={sourceSans.className}>
+        <AuthProvider>
+          <Navigation />
+          <main className="min-h-screen pt-16">{children}</main>
+          <Notification />
+        </AuthProvider>
       </body>
     </html>
   );

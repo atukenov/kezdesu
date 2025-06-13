@@ -7,6 +7,11 @@ dist/
 *.log
 # Ignore environment variable files
 .env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
 # Ignore coverage reports
 coverage/
 # Ignore IDE specific files

@@ -1,0 +1,23 @@
+{
+  "rules": {
+    "meetups": {
+      ".read": "auth != null",
+      "$meetupId": {
+        ".write": "auth != null",
+        "participants": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid"
+          }
+        }
+      }
+    },
+    "chats": {
+      "$meetupId": {
+        ".read": "auth != null",
+        "messages": {
+          ".write": "auth != null"
+        }
+      }
+    }
+  }
+}
