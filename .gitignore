@@ -41,3 +41,15 @@ coverage/
 *.d.ts
 # Ignore compiled JavaScript files
 *.js
+# Ignore compiled TypeScript files
+*.tsbuildinfo
+# Ignore ESLint cache files
+.eslintcache
+# Ignore Prettier cache files
+.prettiercache
+# Ignore Vite cache files
+.vite/
+# Ignore .next cache files
+.next/
+# Ignore Nuxt.js cache files
+.nuxt/
