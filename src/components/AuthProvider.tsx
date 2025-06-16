@@ -1,5 +1,5 @@
 "use client";
-import { auth } from "@/lib/firebase";
+import { auth, createOrUpdateUser } from "@/lib/firebase";
 import { User } from "@/types";
 import { onAuthStateChanged } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -21,7 +21,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setUser({
           id: firebaseUser.uid,
@@ -29,6 +29,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email: firebaseUser.email || "",
           image: firebaseUser.photoURL || undefined,
           status: "available",
+        });
+        // Ensure Firestore user profile is up-to-date
+        await createOrUpdateUser({
+          uid: firebaseUser.uid,
+          displayName: firebaseUser.displayName || undefined,
+          email: firebaseUser.email || "",
+          photoURL: firebaseUser.photoURL || undefined,
         });
       } else {
         setUser(null);

@@ -6,7 +6,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { getDatabase } from "firebase/database";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -45,3 +45,25 @@ export const signOutUser = async () => {
     throw error;
   }
 };
+
+export async function createOrUpdateUser(user: {
+  uid: string;
+  displayName?: string;
+  email: string;
+  photoURL?: string;
+}) {
+  const userRef = doc(db, "users", user.uid);
+  await setDoc(
+    userRef,
+    {
+      id: user.uid,
+      name: user.displayName || "Anonymous",
+      email: user.email,
+      image: user.photoURL || "",
+      status: "available",
+      updatedAt: serverTimestamp(),
+      createdAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
+}

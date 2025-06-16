@@ -23,14 +23,14 @@ const HomePage = () => {
     onValue(meetupsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const meetupList = Object.entries(data).map(
-          ([id, meetup]: [string, any]) => ({
+        const meetupList = Object.entries(data)
+          .map(([id, meetup]: [string, any]) => ({
             id,
             ...meetup,
             time: new Date(meetup.time),
             participants: Object.values(meetup.participants || {}),
-          })
-        );
+          }))
+          .filter((m) => !m.archived); // Only show non-archived
         setMeetups(
           meetupList.sort((a, b) => b.time.getTime() - a.time.getTime())
         );
@@ -99,6 +99,17 @@ const HomePage = () => {
     }
   };
 
+  // Archive (delete) meetup
+  const handleArchiveMeetup = async (meetup: Meetup) => {
+    if (!user || meetup.creatorId !== user.id) return;
+    try {
+      const meetupRef = ref(rtdb, `meetups/${meetup.id}/archived`);
+      await set(meetupRef, true);
+    } catch (error) {
+      console.error("Error archiving meetup:", error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[50vh]">
@@ -131,6 +142,7 @@ const HomePage = () => {
             meetup={meetup}
             currentUser={user}
             onJoin={() => handleJoinMeetup(meetup.id)}
+            onDelete={() => handleArchiveMeetup(meetup)}
           />
         ))}
       </div>

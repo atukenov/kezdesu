@@ -62,6 +62,7 @@ export default function MeetupCard({
   }, [meetup.id]);
 
   const isOwner = meetup.creatorId === currentUser.id;
+  const isParticipant = participants.some((p: any) => p.id === currentUser.id);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -155,15 +156,22 @@ export default function MeetupCard({
                   setActionLoading(null);
                 }}
                 disabled={
+                  isParticipant ||
                   Boolean(
                     meetup.maxParticipants &&
                       participants.length >= meetup.maxParticipants
                   ) || actionLoading === "join"
                 }
-                className="px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50"
+                className={`px-4 py-1 rounded-md transition-colors disabled:opacity-50 ${
+                  isParticipant
+                    ? "bg-gray-400 text-white cursor-not-allowed"
+                    : "bg-blue-500 text-white hover:bg-blue-600"
+                }`}
               >
                 {actionLoading === "join" ? (
                   <LoadingSpinner size={16} />
+                ) : isParticipant ? (
+                  "Joined"
                 ) : (
                   "Join"
                 )}
