@@ -1,4 +1,5 @@
 "use client";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { rtdb } from "@/lib/firebase";
 import type { Meetup, User } from "@/types";
 import { formatDistanceToNow } from "date-fns";
@@ -13,7 +14,6 @@ import {
   HiUsers,
 } from "react-icons/hi";
 import MeetupChat from "./MeetupChat";
-import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface MeetupCardProps {
   meetup: Meetup;
@@ -160,7 +160,8 @@ export default function MeetupCard({
                   Boolean(
                     meetup.maxParticipants &&
                       participants.length >= meetup.maxParticipants
-                  ) || actionLoading === "join"
+                  ) ||
+                  actionLoading === "join"
                 }
                 className={`px-4 py-1 rounded-md transition-colors disabled:opacity-50 ${
                   isParticipant
