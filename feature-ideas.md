@@ -40,7 +40,7 @@
 
 - **Comments/Threaded Chat:** Add threaded comments or a richer chat experience for each meetup.
 - [Done] **Reactions/Emoji:** Allow users to react to messages or meetups with emojis.
-- **Notifications:** In-app and/or email notifications for RSVP, chat mentions, or meetup changes.
+- [Done] **Notifications:** In-app and/or email notifications for RSVP, chat mentions, or meetup changes.
 - **Direct Messaging:** Allow users to send private messages to each other.
 
 ---

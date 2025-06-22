@@ -3,7 +3,12 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import { MeetupModel } from "@/models/MeetupModel";
 import { UserModel } from "@/models/UserModel";
 import { reactToMeetup, subscribeToMeetup } from "@/services/meetupService";
-import { formatDistanceToNow } from "date-fns";
+import {
+  differenceInDays,
+  differenceInMonths,
+  differenceInYears,
+  formatDistanceToNow,
+} from "date-fns";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -38,6 +43,8 @@ export default function MeetupCard({
   const [showChat, setShowChat] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [reactions, setReactions] = useState(meetup.reactions || {});
+  // RSVP handler for card
+  const [rsvpLoading, setRsvpLoading] = useState(false);
 
   useEffect(() => {
     // Subscribe to single meetup for real-time updates
@@ -66,10 +73,76 @@ export default function MeetupCard({
     await reactToMeetup(meetup.id, emoji, currentUser.id);
   };
 
+  // RSVP handler for card
+  const handleRSVP = async () => {
+    if (!currentUser) return;
+    setRsvpLoading(true);
+    const safeUser = {
+      id: currentUser.id,
+      name: currentUser.name,
+      image: currentUser.image || "",
+      email: currentUser.email || "",
+      status: currentUser.status || "Available",
+    };
+    try {
+      if (isParticipant) {
+        // Remove RSVP
+        await import("@/services/meetupService").then(({ leaveMeetup }) =>
+          leaveMeetup(meetup.id, safeUser)
+        );
+      } else {
+        // Add RSVP
+        await import("@/services/meetupService").then(({ joinMeetup }) =>
+          joinMeetup(meetup.id, safeUser)
+        );
+      }
+      // Optionally, refresh participants
+    } catch (err) {
+      // Optionally, show error
+    }
+    setRsvpLoading(false);
+  };
+
+  // Calendar export
+  const handleAddToCalendar = () => {
+    const start = new Date(meetup.time);
+    const end = new Date(start.getTime() + 2 * 60 * 60 * 1000); // 2h default
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "BEGIN:VEVENT",
+      `DTSTART:${start.toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
+      `DTEND:${end.toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
+      `SUMMARY:${meetup.title}`,
+      `DESCRIPTION:${meetup.description || ""}`,
+      `LOCATION:${meetup.location}`,
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const blob = new Blob([ics], { type: "text/calendar" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${meetup.title}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 0);
+  };
+
   return (
     <div
-      className="bg-white rounded-lg shadow p-4 cursor-pointer hover:shadow-lg transition-shadow"
-      onClick={() => {
+      className="bg-background rounded-lg shadow p-4 cursor-pointer hover:shadow-lg transition-shadow text-foreground border border-foreground-accent"
+      onClick={(e) => {
+        // Prevent navigation if the click originated from a button or link
+        if (
+          e.target instanceof HTMLElement &&
+          (e.target.closest("button") || e.target.closest("a"))
+        ) {
+          return;
+        }
         window.location.href = `/meetups/${meetup.id}`;
       }}
     >
@@ -79,17 +152,19 @@ export default function MeetupCard({
             src={meetup.imageUrl}
             alt={meetup.title}
             fill
-            className="object-cover"
+            className="object-cover rounded-lg"
           />
         </div>
       )}
       <div className="p-4">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-lg font-semibold">{meetup.title}</h3>
+          <h3 className="text-lg font-semibold text-foreground">
+            {meetup.title}
+          </h3>
           {meetup.isPublic ? (
-            <HiLockOpen className="text-green-500" title={t("public")} />
+            <HiLockOpen className="text-success" title={t("public")} />
           ) : (
-            <HiLockClosed className="text-red-500" title={t("private")} />
+            <HiLockClosed className="text-danger" title={t("private")} />
           )}
         </div>
         {meetup.categories && meetup.categories.length > 0 && (
@@ -97,7 +172,7 @@ export default function MeetupCard({
             {meetup.categories.map((cat: string, idx: number) => (
               <span
                 key={cat + idx}
-                className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs"
+                className="bg-primary-accent/20 text-primary-accent dark:bg-primary-accent/30 px-2 py-1 rounded-full text-xs font-semibold border border-primary-accent/40"
               >
                 {cat}
               </span>
@@ -105,12 +180,12 @@ export default function MeetupCard({
           </div>
         )}
 
-        <div className="flex items-center text-gray-600 mb-2">
+        <div className="flex items-center text-foreground-accent mb-2">
           <HiLocationMarker className="mr-1" />
           <span>{meetup.location}</span>
         </div>
 
-        <div className="flex items-center text-gray-600 mb-2">
+        <div className="flex items-center text-foreground-accent mb-2">
           <HiUsers className="mr-1" />
           <span>
             {participants.length}
@@ -123,12 +198,12 @@ export default function MeetupCard({
                 key={p.id || idx}
                 src={p.image || "/images/icon.png"}
                 alt={p.name}
-                className="w-7 h-7 rounded-full border-2 border-white shadow-sm bg-gray-100 object-cover"
+                className="w-7 h-7 rounded-full border-2 border-background shadow-sm bg-secondary object-cover"
                 title={p.name}
               />
             ))}
             {participants.length > 5 && (
-              <span className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-200 text-xs font-semibold border-2 border-white">
+              <span className="w-7 h-7 flex items-center justify-center rounded-full bg-secondary text-xs font-semibold border-2 border-background">
                 +{participants.length - 5}
               </span>
             )}
@@ -136,7 +211,7 @@ export default function MeetupCard({
         </div>
 
         {meetup.description && (
-          <p className="text-gray-600 mb-4">{meetup.description}</p>
+          <p className="text-foreground-accent mb-4">{meetup.description}</p>
         )}
 
         {/* Emoji reactions */}
@@ -151,15 +226,19 @@ export default function MeetupCard({
                 className={`flex items-center px-2 py-1 rounded-full text-lg border transition-colors
                   ${
                     reacted
-                      ? "bg-blue-100 border-blue-400"
-                      : "bg-gray-100 border-gray-200 hover:bg-blue-50"
+                      ? "bg-primary-accent border-primary-accent text-foreground"
+                      : "bg-secondary border-foreground-accent hover:bg-primary-accent"
                   }
                 `}
                 aria-label={t("emoji") + ` ${emoji}`}
               >
                 <span>{emoji}</span>
                 {users.length > 0 && (
-                  <span className="ml-1 text-xs text-gray-600">
+                  <span
+                    className={`ml-1 text-xs ${
+                      reacted ? "text-foreground" : "text-foreground-accent"
+                    }`}
+                  >
                     {users.length}
                   </span>
                 )}
@@ -169,10 +248,57 @@ export default function MeetupCard({
         </div>
 
         <div className="flex items-center justify-between mt-4">
-          <span className="text-sm text-gray-500">
-            {formatDistanceToNow(new Date(meetup.time), { addSuffix: true })}
+          <span className="text-sm text-foreground-accent">
+            {(() => {
+              const now = new Date();
+              const eventDate = new Date(meetup.time);
+              const minutes = Math.floor(
+                (eventDate.getTime() - now.getTime()) / 60000
+              );
+              const days = differenceInDays(eventDate, now);
+              const months = differenceInMonths(eventDate, now);
+              const years = differenceInYears(eventDate, now);
+              if (minutes >= 1 && minutes < 60) {
+                return t("minutesLeft", { count: minutes });
+              } else if (days >= 1 && days <= 30) {
+                return t("daysLeft", { count: days });
+              } else if (months >= 1 && months < 12) {
+                return t("monthsLeft", { count: months });
+              } else if (years >= 1) {
+                return t("yearsLeft", { count: years });
+              }
+              return formatDistanceToNow(eventDate, { addSuffix: true });
+            })()}
           </span>
           <div className="flex gap-2">
+            {/* RSVP button for all users except owner */}
+            {!isOwner && (
+              <button
+                onClick={handleRSVP}
+                disabled={rsvpLoading || isParticipant}
+                className={`px-3 py-1 rounded-md transition-colors disabled:opacity-50 ${
+                  isParticipant
+                    ? "bg-secondary text-foreground-accent cursor-not-allowed"
+                    : "bg-green-600 text-white hover:bg-green-700"
+                }`}
+              >
+                {rsvpLoading
+                  ? "..."
+                  : isParticipant
+                  ? t("joined")
+                  : "RSVP / Join"}
+              </button>
+            )}
+            {/* Add to Calendar button */}
+            <button
+              onClick={handleAddToCalendar}
+              className="px-3 py-1 rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors"
+              type="button"
+              aria-label="Add to calendar"
+            >
+              📅
+            </button>
+            {/* Only show edit/delete for owner */}
             {isOwner && onEdit && (
               <button
                 onClick={async () => {
@@ -180,7 +306,7 @@ export default function MeetupCard({
                   await onEdit();
                   setActionLoading(null);
                 }}
-                className="px-3 py-1 text-yellow-600 hover:bg-yellow-50 rounded-md transition-colors"
+                className="px-3 py-1 text-accent hover:bg-primary-accent rounded-md transition-colors"
                 disabled={actionLoading === "edit"}
               >
                 {actionLoading === "edit" ? (
@@ -197,7 +323,7 @@ export default function MeetupCard({
                   await onDelete();
                   setActionLoading(null);
                 }}
-                className="px-3 py-1 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                className="px-3 py-1 text-danger hover:bg-danger/80 rounded-md transition-colors"
                 disabled={actionLoading === "delete"}
               >
                 {actionLoading === "delete" ? (
@@ -207,36 +333,7 @@ export default function MeetupCard({
                 )}
               </button>
             )}
-            {onJoin && status === "active" && !isOwner && (
-              <button
-                onClick={async () => {
-                  setActionLoading("join");
-                  await onJoin();
-                  setActionLoading(null);
-                }}
-                disabled={
-                  isParticipant ||
-                  Boolean(
-                    meetup.maxParticipants &&
-                      participants.length >= meetup.maxParticipants
-                  ) ||
-                  actionLoading === "join"
-                }
-                className={`px-4 py-1 rounded-md transition-colors disabled:opacity-50 ${
-                  isParticipant
-                    ? "bg-gray-400 text-white cursor-not-allowed"
-                    : "bg-blue-500 text-white hover:bg-blue-600"
-                }`}
-              >
-                {actionLoading === "join" ? (
-                  <LoadingSpinner size={16} />
-                ) : isParticipant ? (
-                  t("joined")
-                ) : (
-                  t("join")
-                )}
-              </button>
-            )}
+            {/* Remove legacy onJoin button, now handled by RSVP */}
           </div>
         </div>
 

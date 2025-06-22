@@ -108,16 +108,18 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10 bg-white rounded-xl shadow-lg p-8 flex flex-col items-center">
-      <h2 className="text-2xl font-bold mb-4">{t("profile")}</h2>
+    <div className="max-w-md mx-auto mt-10 bg-background rounded-xl shadow-lg p-8 flex flex-col items-center border border-foreground-accent">
+      <h2 className="text-2xl font-bold mb-4 text-foreground">
+        {t("profile")}
+      </h2>
       <img
         src={profile.image || "/default-avatar.png"}
         alt="avatar"
-        className="w-24 h-24 rounded-full border-4 border-blue-200 mb-4 object-cover"
+        className="w-24 h-24 rounded-full border-4 border-primary-accent mb-4 object-cover bg-secondary"
       />
       {/* Status Toggle - always visible, not in edit mode */}
       <div className="w-full mb-6 flex items-center justify-between">
-        <span className="text-gray-700 font-medium text-base">
+        <span className="text-foreground-accent font-medium text-base">
           {t("status")}:
         </span>
         <button
@@ -125,8 +127,8 @@ export default function ProfilePage() {
           aria-pressed={profile.status === "available"}
           onClick={handleStatusToggle}
           disabled={loading || saving}
-          className={`relative inline-flex items-center h-10 w-24 rounded-full transition-colors focus:outline-none border-2 border-blue-200 shadow-sm
-            ${profile.status === "available" ? "bg-green-400" : "bg-red-300"}
+          className={`relative inline-flex items-center h-10 w-24 rounded-full transition-colors focus:outline-none border-2 border-success shadow-sm
+            ${profile.status === "available" ? "bg-success" : "bg-danger"}
             ${
               loading || saving
                 ? "opacity-60 cursor-not-allowed"
@@ -136,16 +138,24 @@ export default function ProfilePage() {
         >
           <span
             className={`absolute left-2 text-xs font-semibold transition-colors duration-200
-              ${profile.status === "available" ? "text-white" : "text-gray-500"}
+              ${
+                profile.status === "available"
+                  ? "text-white"
+                  : "text-foreground-accent"
+              }
             `}
           ></span>
           <span
             className={`absolute right-2 text-xs font-semibold transition-colors duration-200
-              ${profile.status === "busy" ? "text-white" : "text-gray-500"}
+              ${
+                profile.status === "busy"
+                  ? "text-white"
+                  : "text-foreground-accent"
+              }
             `}
           ></span>
           <span
-            className={`inline-block h-7 w-7 rounded-full bg-white shadow transform transition-transform duration-300
+            className={`inline-block h-7 w-7 rounded-full bg-background shadow transform transition-transform duration-300
               ${
                 profile.status === "available"
                   ? "translate-x-0"
@@ -156,38 +166,40 @@ export default function ProfilePage() {
         </button>
       </div>
       <div className="w-full mb-4">
-        <label className="block text-gray-700 font-medium mb-1">
+        <label className="block text-foreground-accent font-medium mb-1">
           {t("name")}:
         </label>
         {editing ? (
           <input
             value={profile.name}
             onChange={(e) => handleChange("name", e.target.value)}
-            className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-foreground-accent rounded p-2 focus:outline-none focus:ring-2 focus:ring-primary-accent bg-background text-foreground"
           />
         ) : (
-          <span className="text-gray-900"> {profile.name}</span>
+          <span className="text-foreground"> {profile.name}</span>
         )}
       </div>
       <div className="w-full mb-4">
-        <label className="block text-gray-700 font-medium mb-1">
+        <label className="block text-foreground-accent font-medium mb-1">
           {t("bio")}:
         </label>
         {editing ? (
           <textarea
             value={profile.bio || ""}
             onChange={(e) => handleChange("bio", e.target.value)}
-            className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-foreground-accent rounded p-2 focus:outline-none focus:ring-2 focus:ring-primary-accent bg-background text-foreground"
             rows={2}
           />
         ) : (
-          <span className="text-gray-900 whitespace-pre-line">
-            {profile.bio || <span className="text-gray-400">{t("noBio")}</span>}
+          <span className="text-foreground whitespace-pre-line">
+            {profile.bio || (
+              <span className="text-foreground-accent">{t("noBio")}</span>
+            )}
           </span>
         )}
       </div>
       <div className="w-full mb-4">
-        <label className="block text-gray-700 font-medium mb-1">
+        <label className="block text-foreground-accent font-medium mb-1">
           {t("socialLinks")}:
         </label>
         {editing ? (
@@ -202,7 +214,7 @@ export default function ProfilePage() {
                   twitter: e.target.value,
                 })
               }
-              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border border-foreground-accent rounded p-2 focus:outline-none focus:ring-2 focus:ring-primary-accent bg-background text-foreground"
             />
             <input
               type="url"
@@ -214,7 +226,7 @@ export default function ProfilePage() {
                   facebook: e.target.value,
                 })
               }
-              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border border-foreground-accent rounded p-2 focus:outline-none focus:ring-2 focus:ring-primary-accent bg-background text-foreground"
             />
             <input
               type="url"
@@ -226,7 +238,7 @@ export default function ProfilePage() {
                   instagram: e.target.value,
                 })
               }
-              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border border-foreground-accent rounded p-2 focus:outline-none focus:ring-2 focus:ring-primary-accent bg-background text-foreground"
             />
             <input
               type="url"
@@ -238,7 +250,7 @@ export default function ProfilePage() {
                   linkedin: e.target.value,
                 })
               }
-              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border border-foreground-accent rounded p-2 focus:outline-none focus:ring-2 focus:ring-primary-accent bg-background text-foreground"
             />
             <input
               type="url"
@@ -250,7 +262,7 @@ export default function ProfilePage() {
                   website: e.target.value,
                 })
               }
-              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border border-foreground-accent rounded p-2 focus:outline-none focus:ring-2 focus:ring-primary-accent bg-background text-foreground"
             />
           </div>
         ) : (
@@ -260,7 +272,7 @@ export default function ProfilePage() {
                 href={profile.social.twitter}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-blue-500 hover:underline"
+                className="flex items-center gap-2 text-accent hover:underline"
               >
                 <FaTwitter /> Twitter
               </a>
@@ -270,7 +282,7 @@ export default function ProfilePage() {
                 href={profile.social.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-blue-700 hover:underline"
+                className="flex items-center gap-2 text-primary hover:underline"
               >
                 <FaFacebook /> Facebook
               </a>
@@ -280,7 +292,7 @@ export default function ProfilePage() {
                 href={profile.social.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-pink-500 hover:underline"
+                className="flex items-center gap-2 text-accent hover:underline"
               >
                 <FaInstagram /> Instagram
               </a>
@@ -290,7 +302,7 @@ export default function ProfilePage() {
                 href={profile.social.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-blue-800 hover:underline"
+                className="flex items-center gap-2 text-primary-accent hover:underline"
               >
                 <FaLinkedin /> LinkedIn
               </a>
@@ -300,14 +312,16 @@ export default function ProfilePage() {
                 href={profile.social.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-gray-700 hover:underline"
+                className="flex items-center gap-2 text-foreground-accent hover:underline"
               >
                 <FaGlobe /> Website
               </a>
             )}
             {!profile.social ||
             Object.values(profile.social).every((v) => !v) ? (
-              <span className="text-gray-400">{t("noSocialLinks")}</span>
+              <span className="text-foreground-accent">
+                {t("noSocialLinks")}
+              </span>
             ) : null}
           </div>
         )}
@@ -316,14 +330,14 @@ export default function ProfilePage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center"
+          className="w-full py-2 bg-primary text-foreground rounded hover:bg-primary-accent transition-colors disabled:opacity-50 flex items-center justify-center"
         >
           {saving ? <LoadingSpinner size={20} /> : t("save")}
         </button>
       ) : (
         <button
           onClick={() => setEditing(true)}
-          className="w-full py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition-colors"
+          className="w-full py-2 bg-secondary text-foreground rounded hover:bg-foreground-accent hover:text-background transition-colors"
         >
           {t("editProfile")}
         </button>

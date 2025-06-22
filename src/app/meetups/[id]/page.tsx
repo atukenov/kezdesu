@@ -149,7 +149,7 @@ export default function MeetupDetailsPage() {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-3 bg-white rounded-xl shadow-lg p-8">
+    <div className="max-w-lg mt-6 mb-8 bg-background rounded-xl shadow-lg p-4 sm:p-8 md:p-10 lg:p-12 border border-foreground-accent transition-colors dark:bg-background dark:text-foreground mx-4">
       <Toaster />
       {editing ? (
         <form onSubmit={handleEditSubmit} className="space-y-4">

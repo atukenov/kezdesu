@@ -43,14 +43,14 @@ export default function CreateMeetupDialog({
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-white rounded-lg p-6">
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-background rounded-lg p-6 border border-foreground-accent">
           <div className="flex justify-between items-center mb-4">
-            <Dialog.Title className="text-xl font-semibold">
+            <Dialog.Title className="text-xl font-semibold text-foreground">
               Create Meetup
             </Dialog.Title>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-foreground-accent hover:text-danger"
             >
               <HiX className="h-6 w-6" />
             </button>
@@ -59,13 +59,13 @@ export default function CreateMeetupDialog({
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-foreground-accent">
                   Title
                 </label>
                 <input
                   type="text"
                   required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border-foreground-accent bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary"
                   value={formData.title}
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
@@ -74,12 +74,12 @@ export default function CreateMeetupDialog({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-foreground-accent">
                   Description
                 </label>
                 <TextareaAutosize
                   minRows={3}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border-foreground-accent bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary"
                   value={formData.description}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
@@ -88,13 +88,13 @@ export default function CreateMeetupDialog({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-foreground-accent">
                   Location
                 </label>
                 <input
                   type="text"
                   required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border-foreground-accent bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary"
                   value={formData.location}
                   onChange={(e) =>
                     setFormData({ ...formData, location: e.target.value })
@@ -103,13 +103,13 @@ export default function CreateMeetupDialog({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-foreground-accent">
                   Time
                 </label>
                 <input
                   type="datetime-local"
                   required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border-foreground-accent bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary"
                   value={formData.time}
                   onChange={(e) =>
                     setFormData({ ...formData, time: e.target.value })
@@ -118,13 +118,13 @@ export default function CreateMeetupDialog({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-foreground-accent">
                   Maximum Participants (optional)
                 </label>
                 <input
                   type="number"
                   min="2"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border-foreground-accent bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary"
                   value={formData.maxParticipants || ""}
                   onChange={(e) =>
                     setFormData({
@@ -138,19 +138,19 @@ export default function CreateMeetupDialog({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-foreground-accent">
                   Categories/Tags
                 </label>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {formData.categories.map((cat, idx) => (
                     <span
                       key={cat + idx}
-                      className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs flex items-center gap-1"
+                      className="bg-accent text-white px-2 py-1 rounded-full text-xs flex items-center gap-1"
                     >
                       {cat}
                       <button
                         type="button"
-                        className="ml-1 text-blue-500 hover:text-red-500"
+                        className="ml-1 text-foreground-accent hover:text-danger"
                         onClick={() =>
                           setFormData((prev) => ({
                             ...prev,
@@ -168,7 +168,7 @@ export default function CreateMeetupDialog({
                 </div>
                 <input
                   type="text"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full rounded-md border-foreground-accent bg-background text-foreground shadow-sm focus:border-primary focus:ring-primary"
                   placeholder="Add a category and press Enter"
                   value={categoryInput}
                   onChange={(e) => setCategoryInput(e.target.value)}
@@ -193,7 +193,7 @@ export default function CreateMeetupDialog({
                 <input
                   type="checkbox"
                   id="isPublic"
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-foreground-accent text-primary focus:ring-primary"
                   checked={formData.isPublic}
                   onChange={(e) =>
                     setFormData({ ...formData, isPublic: e.target.checked })
@@ -201,7 +201,7 @@ export default function CreateMeetupDialog({
                 />
                 <label
                   htmlFor="isPublic"
-                  className="ml-2 text-sm text-gray-700"
+                  className="ml-2 text-sm text-foreground-accent"
                 >
                   Make this meetup public
                 </label>
@@ -212,13 +212,13 @@ export default function CreateMeetupDialog({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                className="px-4 py-2 border border-foreground-accent rounded-md text-foreground hover:bg-secondary"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                className="px-4 py-2 bg-primary text-foreground rounded-md hover:bg-primary-accent"
               >
                 Create Meetup
               </button>

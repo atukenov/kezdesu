@@ -1,10 +1,12 @@
 "use client";
 
 import { useAuth } from "@/components/AuthProvider";
+import CreateMeetupDialog from "@/components/CreateMeetupDialog";
 import MeetupCard from "@/components/MeetupCard";
 import { MeetupModel } from "@/models/MeetupModel";
 import {
   archiveMeetup,
+  createMeetup,
   joinMeetup,
   leaveMeetup,
   subscribeToMeetups,
@@ -12,6 +14,7 @@ import {
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import { HiPlus } from "react-icons/hi";
 
 export default function MeetupsPage() {
   const t = useTranslations();
@@ -19,6 +22,7 @@ export default function MeetupsPage() {
   const [meetups, setMeetups] = useState<(MeetupModel & { id: string })[]>([]);
   const [fetching, setFetching] = useState(true);
   const [tab, setTab] = useState<"mine" | "joined">("mine");
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   useEffect(() => {
     if (loading) return;
@@ -68,6 +72,31 @@ export default function MeetupsPage() {
     }
   };
 
+  // Create meetup handler
+  const handleCreateMeetup = async (
+    data: Omit<
+      MeetupModel,
+      "id" | "participants" | "creatorId" | "creator" | "status" | "archived"
+    > & { categories?: string[] }
+  ) => {
+    if (!user) return;
+    try {
+      await createMeetup({
+        ...data,
+        creatorId: user.id,
+        creator: user,
+        status: "active",
+        participants: [user],
+        time: new Date(data.time).toISOString(),
+        archived: false,
+        categories: data.categories || [],
+      });
+      setIsCreateDialogOpen(false);
+    } catch (error) {
+      toast.error("Error creating meetup");
+    }
+  };
+
   // Filter meetups for tabs
   const myMeetups = useMemo(
     () => (user ? meetups.filter((m) => m.creatorId === user.id) : []),
@@ -90,28 +119,42 @@ export default function MeetupsPage() {
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <div className="flex gap-2 mb-6">
-        <button
-          className={`px-4 py-2 rounded-t-md font-semibold border-b-2 transition-colors ${
-            tab === "mine"
-              ? "border-blue-500 text-blue-600 bg-blue-50"
-              : "border-transparent text-gray-500 bg-gray-100 hover:bg-blue-50"
-          }`}
-          onClick={() => setTab("mine")}
-        >
-          My Meetups
-        </button>
-        <button
-          className={`px-4 py-2 rounded-t-md font-semibold border-b-2 transition-colors ${
-            tab === "joined"
-              ? "border-blue-500 text-blue-600 bg-blue-50"
-              : "border-transparent text-gray-500 bg-gray-100 hover:bg-blue-50"
-          }`}
-          onClick={() => setTab("joined")}
-        >
-          Joined Meetups
-        </button>
+      <div className="flex gap-2 mb-4 items-center justify-between">
+        <div>
+          <button
+            className={`px-4 py-2 rounded-t-md font-semibold border-b-2 transition-colors ${
+              tab === "mine"
+                ? "border-primary text-primary bg-secondary"
+                : "border-transparent text-foreground-accent bg-background hover:bg-secondary"
+            }`}
+            onClick={() => setTab("mine")}
+          >
+            My Meetups
+          </button>
+          <button
+            className={`px-4 py-2 rounded-t-md font-semibold border-b-2 transition-colors ${
+              tab === "joined"
+                ? "border-primary text-primary bg-secondary"
+                : "border-transparent text-foreground-accent bg-background hover:bg-secondary"
+            }`}
+            onClick={() => setTab("joined")}
+          >
+            Joined Meetups
+          </button>
+        </div>
       </div>
+      {tab === "mine" && (
+        <div className="flex justify-end mb-6">
+          <button
+            onClick={() => setIsCreateDialogOpen(true)}
+            className="flex items-center px-4 py-2 bg-primary text-foreground rounded-md shadow hover:bg-primary-accent transition-colors font-semibold text-base"
+            aria-label="Create Meetup"
+          >
+            <HiPlus className="mr-2 text-lg" />
+            Create Meetup
+          </button>
+        </div>
+      )}
       {tab === "mine" ? (
         myMeetups.length === 0 ? (
           <div>No meetups found.</div>
@@ -144,6 +187,13 @@ export default function MeetupsPage() {
             />
           ))}
         </div>
+      )}
+      {tab === "mine" && (
+        <CreateMeetupDialog
+          isOpen={isCreateDialogOpen}
+          onClose={() => setIsCreateDialogOpen(false)}
+          onSubmit={handleCreateMeetup}
+        />
       )}
     </div>
   );

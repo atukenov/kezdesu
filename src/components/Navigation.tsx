@@ -44,14 +44,27 @@ const Navigation = () => {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 shadow-lg transition-colors">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background shadow-lg transition-colors border-b border-foreground-accent">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <Link
             href="/"
-            className="font-bold text-xl text-blue-600 dark:text-blue-300"
+            className="flex items-center font-bold text-xl text-primary gap-2"
           >
-            Kezdesu
+            <img
+              src="/images/logo.png"
+              alt="Kezdesu Logo"
+              className="h-12 w-12 object-contain"
+            />
+            <span
+              style={{
+                fontFamily: "var(--font-title)",
+                fontWeight: 500,
+                fontSize: "1.3rem",
+              }}
+            >
+              Kezdesu
+            </span>
           </Link>
 
           {/* Desktop navigation */}
@@ -62,8 +75,8 @@ const Navigation = () => {
                 href={item.href}
                 className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   pathname === item.href
-                    ? "text-blue-600 bg-blue-50"
-                    : "text-gray-700 hover:text-blue-600 hover:bg-blue-50 dark:text-gray-200 dark:hover:text-blue-300 dark:hover:bg-blue-900/30"
+                    ? "text-primary bg-secondary"
+                    : "text-foreground hover:text-primary hover:bg-secondary dark:text-foreground dark:hover:text-primary dark:hover:bg-secondary"
                 }`}
               >
                 <item.icon className="w-5 h-5 mr-1" />
@@ -73,7 +86,7 @@ const Navigation = () => {
             <LanguageSwitcher />
             <button
               onClick={toggleTheme}
-              className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-300 dark:hover:bg-blue-900/30 transition-colors"
+              className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-foreground hover:text-primary hover:bg-secondary transition-colors"
               aria-label={t("theme")}
             >
               {theme === "dark" ? (
@@ -85,7 +98,7 @@ const Navigation = () => {
             </button>
             <button
               onClick={handleSignOut}
-              className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 dark:text-gray-200 dark:hover:text-red-400 dark:hover:bg-red-900/30"
+              className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-danger hover:bg-danger/10 transition-colors"
             >
               <HiLogout className="w-5 h-5 mr-1" />
               {t("signOut")}
@@ -94,8 +107,9 @@ const Navigation = () => {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden"
+            className="md:hidden focus:outline-none focus:ring-2 focus:ring-primary rounded text-foreground dark:text-foreground"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? t("closeMenu") : t("openMenu")}
           >
             {isMenuOpen ? (
               <HiX className="h-6 w-6" />
@@ -109,11 +123,11 @@ const Navigation = () => {
         {isMenuOpen && (
           <div className="md:hidden">
             {/* Language and dark mode controls at the top, separated visually */}
-            <div className="flex flex-col gap-2 px-2 pt-4 pb-2 border-b border-gray-200 dark:border-gray-700 mb-2">
+            <div className="flex flex-col gap-2 px-2 pt-4 pb-2 border-b border-foreground-accent mb-2 bg-background">
               <LanguageSwitcher />
               <button
                 onClick={toggleTheme}
-                className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 hover:bg-blue-50 dark:hover:text-blue-300 dark:hover:bg-blue-900/30"
+                className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-foreground hover:text-primary hover:bg-secondary transition-colors"
                 aria-label="Toggle dark mode"
               >
                 {theme === "dark" ? (
@@ -124,15 +138,15 @@ const Navigation = () => {
                 {theme === "dark" ? t("light") : t("dark")}
               </button>
             </div>
-            <div className="px-2 pt-2 pb-3 space-y-1">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-background">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center px-3 py-2 rounded-md text-base font-medium ${
+                  className={`flex items-center px-3 py-2 rounded-md text-base font-medium transition-colors ${
                     pathname === item.href
-                      ? "text-blue-600 bg-blue-50"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+                      ? "text-primary bg-secondary"
+                      : "text-foreground hover:text-primary hover:bg-secondary"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -145,7 +159,7 @@ const Navigation = () => {
                   handleSignOut();
                   setIsMenuOpen(false);
                 }}
-                className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-red-600 hover:bg-red-50"
+                className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-danger hover:bg-danger/10 transition-colors"
               >
                 <HiLogout className="w-5 h-5 mr-2" />
                 {t("signOut")}
