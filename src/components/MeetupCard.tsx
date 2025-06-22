@@ -1,8 +1,10 @@
 "use client";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { MeetupModel } from "@/models/MeetupModel";
+import { UserModel } from "@/models/UserModel";
 import { reactToMeetup, subscribeToMeetup } from "@/services/meetupService";
-import type { Meetup, User } from "@/types";
 import { formatDistanceToNow } from "date-fns";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
@@ -14,8 +16,8 @@ import {
 import MeetupChat from "./MeetupChat";
 
 interface MeetupCardProps {
-  meetup: Meetup;
-  currentUser: User;
+  meetup: MeetupModel & { id: string };
+  currentUser: UserModel;
   onJoin?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -28,7 +30,10 @@ export default function MeetupCard({
   onEdit,
   onDelete,
 }: MeetupCardProps) {
-  const [participants, setParticipants] = useState(meetup.participants);
+  const t = useTranslations();
+  const [participants, setParticipants] = useState<UserModel[]>(
+    meetup.participants
+  );
   const [status, setStatus] = useState(meetup.status);
   const [showChat, setShowChat] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -50,7 +55,9 @@ export default function MeetupCard({
   }, [meetup.id]);
 
   const isOwner = meetup.creatorId === currentUser.id;
-  const isParticipant = participants.some((p: any) => p.id === currentUser.id);
+  const isParticipant = participants.some(
+    (p: UserModel) => p.id === currentUser.id
+  );
 
   // Emoji reactions UI
   const EMOJIS = ["👍", "🎉", "😂", "🔥", "❤️", "😮"];
@@ -80,9 +87,9 @@ export default function MeetupCard({
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-lg font-semibold">{meetup.title}</h3>
           {meetup.isPublic ? (
-            <HiLockOpen className="text-green-500" />
+            <HiLockOpen className="text-green-500" title={t("public")} />
           ) : (
-            <HiLockClosed className="text-red-500" />
+            <HiLockClosed className="text-red-500" title={t("private")} />
           )}
         </div>
         {meetup.categories && meetup.categories.length > 0 && (
@@ -111,7 +118,7 @@ export default function MeetupCard({
           </span>
           {/* Show participant avatars (up to 5) */}
           <div className="flex ml-2 -space-x-2">
-            {participants.slice(0, 5).map((p: any, idx: number) => (
+            {participants.slice(0, 5).map((p: UserModel, idx: number) => (
               <img
                 key={p.id || idx}
                 src={p.image || "/images/icon.png"}
@@ -148,7 +155,7 @@ export default function MeetupCard({
                       : "bg-gray-100 border-gray-200 hover:bg-blue-50"
                   }
                 `}
-                aria-label={`React with ${emoji}`}
+                aria-label={t("emoji") + ` ${emoji}`}
               >
                 <span>{emoji}</span>
                 {users.length > 0 && (
@@ -179,7 +186,7 @@ export default function MeetupCard({
                 {actionLoading === "edit" ? (
                   <LoadingSpinner size={16} />
                 ) : (
-                  "Edit"
+                  t("edit")
                 )}
               </button>
             )}
@@ -196,7 +203,7 @@ export default function MeetupCard({
                 {actionLoading === "delete" ? (
                   <LoadingSpinner size={16} />
                 ) : (
-                  "Delete"
+                  t("delete")
                 )}
               </button>
             )}
@@ -224,9 +231,9 @@ export default function MeetupCard({
                 {actionLoading === "join" ? (
                   <LoadingSpinner size={16} />
                 ) : isParticipant ? (
-                  "Joined"
+                  t("joined")
                 ) : (
-                  "Join"
+                  t("join")
                 )}
               </button>
             )}

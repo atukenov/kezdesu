@@ -11,6 +11,7 @@ import {
   leaveMeetup,
   updateMeetup,
 } from "@/services/meetupService";
+import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
@@ -24,6 +25,7 @@ import {
 } from "react-icons/hi";
 
 export default function MeetupDetailsPage() {
+  const t = useTranslations();
   const params = useParams();
   const router = useRouter();
   const meetupId = params?.id as string;
@@ -55,7 +57,9 @@ export default function MeetupDetailsPage() {
     );
   if (!meetup)
     return (
-      <div className="text-center text-gray-600 mt-10">Meetup not found.</div>
+      <div className="text-center text-gray-600 mt-10">
+        {t("meetupNotFound")}
+      </div>
     );
 
   // Owner check

@@ -1,4 +1,6 @@
 import { AuthProvider } from "@/components/AuthProvider";
+import IntlProvider from "@/components/IntlProvider";
+import { LocaleProvider } from "@/components/LocaleProvider";
 import Navigation from "@/components/Navigation";
 import Notification from "@/components/Notification";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -34,9 +36,13 @@ export default function RootLayout({
       <body className={sourceSans.className}>
         <ThemeProvider>
           <AuthProvider>
-            <Navigation />
-            <main className="min-h-screen pt-16">{children}</main>
-            <Notification />
+            <LocaleProvider>
+              <IntlProvider>
+                <Navigation />
+                <main className="min-h-screen pt-16">{children}</main>
+                <Notification />
+              </IntlProvider>
+            </LocaleProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

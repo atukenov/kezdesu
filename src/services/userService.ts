@@ -47,10 +47,12 @@ export function subscribeToUser(
 export async function getUsers(
   filter?: Partial<UserModel>
 ): Promise<UserModel[]> {
-  let q = collection(db, "users");
+  let q: any = collection(db, "users");
   if (filter && filter.email) {
     q = query(q, where("email", "==", filter.email));
   }
   const snap = await getDocs(q);
-  return snap.docs.map((doc) => toUserModel(doc.data()));
+  return snap.docs.map((doc) =>
+    toUserModel(Object.assign({ id: doc.id }, doc.data()))
+  );
 }

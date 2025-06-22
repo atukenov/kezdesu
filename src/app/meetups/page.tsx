@@ -9,10 +9,12 @@ import {
   leaveMeetup,
   subscribeToMeetups,
 } from "@/services/meetupService";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function MeetupsPage() {
+  const t = useTranslations();
   const { user, loading } = useAuth();
   const [meetups, setMeetups] = useState<(MeetupModel & { id: string })[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -40,13 +42,13 @@ export default function MeetupsPage() {
     try {
       if (isParticipant) {
         await leaveMeetup(meetup.id, user);
-        toast("You left the meetup.");
+        toast(t("success"));
       } else {
         await joinMeetup(meetup.id, user);
-        toast.success("RSVP successful!");
+        toast.success(t("success"));
       }
     } catch (err) {
-      toast.error("Failed to update RSVP.");
+      toast.error(t("error"));
     }
   };
 
@@ -57,12 +59,12 @@ export default function MeetupsPage() {
 
   // Delete handler
   const handleDelete = async (meetup: MeetupModel & { id: string }) => {
-    if (!confirm("Are you sure you want to delete this meetup?")) return;
+    if (!confirm(t("confirmDelete"))) return;
     try {
       await archiveMeetup(meetup.id);
-      toast.success("Meetup deleted");
+      toast.success(t("success"));
     } catch (err) {
-      toast.error("Failed to delete meetup.");
+      toast.error(t("error"));
     }
   };
 

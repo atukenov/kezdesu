@@ -6,6 +6,7 @@ import { UserModel } from "@/models/UserModel";
 import { createOrUpdateUser, getUser } from "@/services/userService";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -18,6 +19,7 @@ import {
 } from "react-icons/fa";
 
 export default function ProfilePage() {
+  const t = useTranslations();
   const auth = getAuth(app);
   const db = getFirestore(app);
   const user = auth.currentUser;
@@ -48,14 +50,13 @@ export default function ProfilePage() {
           setProfile(userData);
         }
       } catch (err: any) {
-        // Only show error, do not create a new profile on error
-        toast.error("Failed to load profile. Please try again.");
+        toast.error(t("error") + ": " + t("notFound"));
         console.error("Profile fetch error:", err);
       }
       setLoading(false);
     };
     fetchProfile();
-  }, [user]);
+  }, [user, t]);
 
   const handleChange = (field: keyof UserModel, value: any) => {
     setProfile((prev) => (prev ? { ...prev, [field]: value } : prev));
@@ -66,11 +67,11 @@ export default function ProfilePage() {
     setSaving(true);
     try {
       await createOrUpdateUser(profile);
-      toast.success("Profile updated!");
+      toast.success(t("success"));
       setEditing(false);
     } catch (err) {
       console.log(err);
-      toast.error("Failed to update profile.");
+      toast.error(t("error"));
     }
     setSaving(false);
   };
@@ -92,16 +93,23 @@ export default function ProfilePage() {
   };
 
   if (!user) return null;
-  if (loading || !profile)
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-[50vh]">
-        <LoadingSpinner size={40} />
+        <LoadingSpinner />
       </div>
     );
+  }
+
+  if (!profile) {
+    return (
+      <div className="text-center text-gray-600 mt-10">{t("notFound")}</div>
+    );
+  }
 
   return (
     <div className="max-w-md mx-auto mt-10 bg-white rounded-xl shadow-lg p-8 flex flex-col items-center">
-      <h2 className="text-2xl font-bold mb-4">Profile</h2>
+      <h2 className="text-2xl font-bold mb-4">{t("profile")}</h2>
       <img
         src={profile.image || "/default-avatar.png"}
         alt="avatar"
@@ -109,7 +117,9 @@ export default function ProfilePage() {
       />
       {/* Status Toggle - always visible, not in edit mode */}
       <div className="w-full mb-6 flex items-center justify-between">
-        <span className="text-gray-700 font-medium text-base">Status:</span>
+        <span className="text-gray-700 font-medium text-base">
+          {t("status")}:
+        </span>
         <button
           type="button"
           aria-pressed={profile.status === "available"}
@@ -146,7 +156,9 @@ export default function ProfilePage() {
         </button>
       </div>
       <div className="w-full mb-4">
-        <label className="block text-gray-700 font-medium mb-1">Name:</label>
+        <label className="block text-gray-700 font-medium mb-1">
+          {t("name")}:
+        </label>
         {editing ? (
           <input
             value={profile.name}
@@ -158,7 +170,9 @@ export default function ProfilePage() {
         )}
       </div>
       <div className="w-full mb-4">
-        <label className="block text-gray-700 font-medium mb-1">Bio:</label>
+        <label className="block text-gray-700 font-medium mb-1">
+          {t("bio")}:
+        </label>
         {editing ? (
           <textarea
             value={profile.bio || ""}
@@ -168,19 +182,19 @@ export default function ProfilePage() {
           />
         ) : (
           <span className="text-gray-900 whitespace-pre-line">
-            {profile.bio || <span className="text-gray-400">No bio</span>}
+            {profile.bio || <span className="text-gray-400">{t("noBio")}</span>}
           </span>
         )}
       </div>
       <div className="w-full mb-4">
         <label className="block text-gray-700 font-medium mb-1">
-          Social Links:
+          {t("socialLinks")}:
         </label>
         {editing ? (
           <div className="space-y-2">
             <input
               type="url"
-              placeholder="Twitter URL"
+              placeholder={t("twitterUrl")}
               value={profile.social?.twitter || ""}
               onChange={(e) =>
                 handleChange("social", {
@@ -192,7 +206,7 @@ export default function ProfilePage() {
             />
             <input
               type="url"
-              placeholder="Facebook URL"
+              placeholder={t("facebookUrl")}
               value={profile.social?.facebook || ""}
               onChange={(e) =>
                 handleChange("social", {
@@ -204,7 +218,7 @@ export default function ProfilePage() {
             />
             <input
               type="url"
-              placeholder="Instagram URL"
+              placeholder={t("instagramUrl")}
               value={profile.social?.instagram || ""}
               onChange={(e) =>
                 handleChange("social", {
@@ -216,7 +230,7 @@ export default function ProfilePage() {
             />
             <input
               type="url"
-              placeholder="LinkedIn URL"
+              placeholder={t("linkedinUrl")}
               value={profile.social?.linkedin || ""}
               onChange={(e) =>
                 handleChange("social", {
@@ -228,7 +242,7 @@ export default function ProfilePage() {
             />
             <input
               type="url"
-              placeholder="Website URL"
+              placeholder={t("websiteUrl")}
               value={profile.social?.website || ""}
               onChange={(e) =>
                 handleChange("social", {
@@ -293,7 +307,7 @@ export default function ProfilePage() {
             )}
             {!profile.social ||
             Object.values(profile.social).every((v) => !v) ? (
-              <span className="text-gray-400">No social links</span>
+              <span className="text-gray-400">{t("noSocialLinks")}</span>
             ) : null}
           </div>
         )}
@@ -304,14 +318,14 @@ export default function ProfilePage() {
           disabled={saving}
           className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center"
         >
-          {saving ? <LoadingSpinner size={20} /> : "Save"}
+          {saving ? <LoadingSpinner size={20} /> : t("save")}
         </button>
       ) : (
         <button
           onClick={() => setEditing(true)}
           className="w-full py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition-colors"
         >
-          Edit Profile
+          {t("editProfile")}
         </button>
       )}
     </div>

@@ -11,10 +11,12 @@ import {
   joinMeetup,
   subscribeToMeetups,
 } from "@/services/meetupService";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { HiPlus } from "react-icons/hi";
 
 const HomePage = () => {
+  const t = useTranslations();
   const { user, loading } = useAuth();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [meetups, setMeetups] = useState<(MeetupModel & { id: string })[]>([]);
@@ -63,7 +65,7 @@ const HomePage = () => {
   };
 
   // Archive (delete) meetup
-  const handleArchiveMeetup = async (meetup: MeetupModel) => {
+  const handleArchiveMeetup = async (meetup: MeetupModel & { id: string }) => {
     if (!user || meetup.creatorId !== user.id) return;
     try {
       await archiveMeetup(meetup.id);
@@ -82,7 +84,10 @@ const HomePage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[50vh]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
+        <div
+          className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
+          aria-label={t("loading")}
+        />
       </div>
     );
   }
@@ -95,25 +100,27 @@ const HomePage = () => {
     <div className="max-w-4xl mx-auto p-4">
       <div className="flex flex-row sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
         <h1 className="text-2xl font-bold text-gray-900 flex-shrink-0">
-          Recent Meetups
+          {t("recentMeetups")}
         </h1>
         <div className="flex flex-1 gap-2 items-center justify-end">
           <button
             onClick={() => setIsCreateDialogOpen(true)}
             className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 transition-colors font-semibold text-base"
+            aria-label={t("createMeetup")}
           >
             <HiPlus className="mr-2 text-lg" />
-            Create Meetup
+            {t("createMeetup")}
           </button>
         </div>
       </div>
       <div className="flex mb-8">
         <input
           type="text"
-          placeholder="Search by category or tag..."
+          placeholder={t("searchPlaceholder")}
           className="w-full max-w-md border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg px-4 py-2 text-sm shadow-sm transition-all placeholder-gray-400 bg-white"
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
+          aria-label={t("search")}
         />
       </div>
 
@@ -122,7 +129,7 @@ const HomePage = () => {
           <MeetupCard
             key={meetup.id}
             meetup={meetup}
-            currentUser={user}
+            currentUser={user as UserModel}
             onJoin={() => handleJoinMeetup(meetup.id)}
             onDelete={() => handleArchiveMeetup(meetup)}
           />
