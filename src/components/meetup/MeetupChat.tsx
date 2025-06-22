@@ -1,4 +1,5 @@
 "use client";
+import UserAvatar from "@/components/shared/UserAvatar";
 import { MessageModel } from "@/models/MessageModel";
 import { UserModel } from "@/models/UserModel";
 import {
@@ -83,13 +84,12 @@ export default function MeetupChat({ meetupId, currentUser }: MeetupChatProps) {
                 message.userId === currentUser.id ? "flex-row-reverse" : ""
               }`}
             >
-              {message.userImage && (
-                <img
-                  src={message.userImage}
-                  alt={message.userName}
-                  className="w-7 h-7 rounded-full"
-                />
-              )}
+              <UserAvatar
+                src={message.userImage}
+                alt={message.userName}
+                size={28}
+                className=""
+              />
               <div
                 className={`relative max-w-[70%] rounded-lg px-3 py-2 text-sm shadow-sm ${
                   message.userId === currentUser.id

@@ -1,8 +1,8 @@
 "use client";
 import { NextIntlClientProvider } from "next-intl";
 import { ReactNode } from "react";
-import en from "../../messages/en.json";
-import ru from "../../messages/ru.json";
+import en from "../../../messages/en.json";
+import ru from "../../../messages/ru.json";
 import { useLocaleContext } from "./LocaleProvider";
 
 const messagesMap = { en, ru };

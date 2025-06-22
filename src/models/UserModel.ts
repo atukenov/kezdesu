@@ -16,6 +16,7 @@ export interface UserModel {
     linkedin?: string;
     website?: string;
   };
+  role?: string; // 'admin' | 'user' | ...
 }
 
 // Helper to convert Firestore data to UserModel
@@ -29,5 +30,6 @@ export function toUserModel(data: any): UserModel {
     location: data.location,
     bio: data.bio,
     social: data.social,
+    role: data.role,
   };
 }

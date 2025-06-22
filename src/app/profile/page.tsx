@@ -1,6 +1,11 @@
 "use client";
 
-import LoadingSpinner from "@/components/LoadingSpinner";
+import ProfileAvatar from "@/components/profile/ProfileAvatar";
+import ProfileBio from "@/components/profile/ProfileBio";
+import ProfileName from "@/components/profile/ProfileName";
+import ProfileSocialLinks from "@/components/profile/ProfileSocialLinks";
+import ProfileStatusToggle from "@/components/profile/ProfileStatusToggle";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { app } from "@/lib/firebase";
 import { UserModel } from "@/models/UserModel";
 import { createOrUpdateUser, getUser } from "@/services/userService";
@@ -10,13 +15,6 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import {
-  FaFacebook,
-  FaGlobe,
-  FaInstagram,
-  FaLinkedin,
-  FaTwitter,
-} from "react-icons/fa";
 
 export default function ProfilePage() {
   const t = useTranslations();
@@ -112,73 +110,18 @@ export default function ProfilePage() {
       <h2 className="text-2xl font-bold mb-4 text-foreground">
         {t("profile")}
       </h2>
-      <img
-        src={profile.image || "/default-avatar.png"}
-        alt="avatar"
-        className="w-24 h-24 rounded-full border-4 border-primary-accent mb-4 object-cover bg-secondary"
+      <ProfileAvatar image={profile.image} />
+      <ProfileStatusToggle
+        status={profile.status}
+        loading={loading}
+        saving={saving}
+        onToggle={handleStatusToggle}
       />
-      {/* Status Toggle - always visible, not in edit mode */}
-      <div className="w-full mb-6 flex items-center justify-between">
-        <span className="text-foreground-accent font-medium text-base">
-          {t("status")}:
-        </span>
-        <button
-          type="button"
-          aria-pressed={profile.status === "available"}
-          onClick={handleStatusToggle}
-          disabled={loading || saving}
-          className={`relative inline-flex items-center h-10 w-24 rounded-full transition-colors focus:outline-none border-2 border-success shadow-sm
-            ${profile.status === "available" ? "bg-success" : "bg-danger"}
-            ${
-              loading || saving
-                ? "opacity-60 cursor-not-allowed"
-                : "cursor-pointer"
-            }
-          `}
-        >
-          <span
-            className={`absolute left-2 text-xs font-semibold transition-colors duration-200
-              ${
-                profile.status === "available"
-                  ? "text-white"
-                  : "text-foreground-accent"
-              }
-            `}
-          ></span>
-          <span
-            className={`absolute right-2 text-xs font-semibold transition-colors duration-200
-              ${
-                profile.status === "busy"
-                  ? "text-white"
-                  : "text-foreground-accent"
-              }
-            `}
-          ></span>
-          <span
-            className={`inline-block h-7 w-7 rounded-full bg-background shadow transform transition-transform duration-300
-              ${
-                profile.status === "available"
-                  ? "translate-x-0"
-                  : "translate-x-14"
-              }
-            `}
-          />
-        </button>
-      </div>
-      <div className="w-full mb-4">
-        <label className="block text-foreground-accent font-medium mb-1">
-          {t("name")}:
-        </label>
-        {editing ? (
-          <input
-            value={profile.name}
-            onChange={(e) => handleChange("name", e.target.value)}
-            className="w-full border border-foreground-accent rounded p-2 focus:outline-none focus:ring-2 focus:ring-primary-accent bg-background text-foreground"
-          />
-        ) : (
-          <span className="text-foreground"> {profile.name}</span>
-        )}
-      </div>
+      <ProfileName
+        name={profile.name}
+        editing={editing}
+        onChange={(value) => handleChange("name", value)}
+      />
       <div className="w-full mb-4">
         <label className="block text-foreground-accent font-medium mb-1">
           {t("bio")}:
@@ -191,11 +134,7 @@ export default function ProfilePage() {
             rows={2}
           />
         ) : (
-          <span className="text-foreground whitespace-pre-line">
-            {profile.bio || (
-              <span className="text-foreground-accent">{t("noBio")}</span>
-            )}
-          </span>
+          <ProfileBio bio={profile.bio} />
         )}
       </div>
       <div className="w-full mb-4">
@@ -266,64 +205,7 @@ export default function ProfilePage() {
             />
           </div>
         ) : (
-          <div className="space-y-1">
-            {profile.social?.twitter && (
-              <a
-                href={profile.social.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-accent hover:underline"
-              >
-                <FaTwitter /> Twitter
-              </a>
-            )}
-            {profile.social?.facebook && (
-              <a
-                href={profile.social.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-primary hover:underline"
-              >
-                <FaFacebook /> Facebook
-              </a>
-            )}
-            {profile.social?.instagram && (
-              <a
-                href={profile.social.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-accent hover:underline"
-              >
-                <FaInstagram /> Instagram
-              </a>
-            )}
-            {profile.social?.linkedin && (
-              <a
-                href={profile.social.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-primary-accent hover:underline"
-              >
-                <FaLinkedin /> LinkedIn
-              </a>
-            )}
-            {profile.social?.website && (
-              <a
-                href={profile.social.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-foreground-accent hover:underline"
-              >
-                <FaGlobe /> Website
-              </a>
-            )}
-            {!profile.social ||
-            Object.values(profile.social).every((v) => !v) ? (
-              <span className="text-foreground-accent">
-                {t("noSocialLinks")}
-              </span>
-            ) : null}
-          </div>
+          <ProfileSocialLinks social={profile.social} />
         )}
       </div>
       {editing ? (

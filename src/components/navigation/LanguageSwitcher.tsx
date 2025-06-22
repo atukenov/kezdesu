@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FaGlobe } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi";
-import { useLocaleContext } from "./LocaleProvider";
+import { useLocaleContext } from "../providers/LocaleProvider";
 
 const locales = [
   { code: "en", label: "EN", icon: "🇬🇧" },

@@ -1,8 +1,11 @@
 "use client";
 
-import { useAuth } from "@/components/AuthProvider";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import MeetupChat from "@/components/MeetupChat";
+import MeetupChat from "@/components/meetup/MeetupChat";
+import MeetupDetailsInfo from "@/components/meetup/MeetupDetailsInfo";
+import MeetupParticipants from "@/components/meetup/MeetupParticipants";
+import RSVPButton from "@/components/meetup/RSVPButton";
+import { useAuth } from "@/components/providers/AuthProvider";
+import LoadingSpinner from "@/components/shared/LoadingSpinner";
 import { MeetupModel } from "@/models/MeetupModel";
 import {
   archiveMeetup,
@@ -15,14 +18,7 @@ import { useTranslations } from "next-intl";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import {
-  HiChatAlt,
-  HiClock,
-  HiLocationMarker,
-  HiLockClosed,
-  HiLockOpen,
-  HiUsers,
-} from "react-icons/hi";
+import { HiChatAlt } from "react-icons/hi";
 
 export default function MeetupDetailsPage() {
   const t = useTranslations();
@@ -270,103 +266,8 @@ export default function MeetupDetailsPage() {
           <h2 className="text-2xl font-bold mb-4 text-center">
             {meetup.title}
           </h2>
-          <div className="flex flex-col gap-2 mb-4">
-            <div className="flex items-center gap-2 text-gray-700">
-              <HiLocationMarker className="w-5 h-5" />
-              <span>{meetup.location}</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <HiClock className="w-5 h-5" />
-              <span>
-                {meetup.time && new Date(meetup.time).toLocaleString()}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <HiUsers className="w-5 h-5" />
-              <span>
-                {Array.isArray(meetup.participants)
-                  ? meetup.participants.length
-                  : 0}{" "}
-                participants
-              </span>
-              {/* Show participant avatars and names */}
-              <div className="flex ml-2 -space-x-2">
-                {Array.isArray(meetup.participants) &&
-                  meetup.participants.length > 0 &&
-                  meetup.participants
-                    .slice(0, 5)
-                    .map((p, idx) => (
-                      <img
-                        key={p.id || idx}
-                        src={p.image || "/images/icon.png"}
-                        alt={p.name}
-                        className="w-7 h-7 rounded-full border-2 border-white shadow-sm bg-gray-100 object-cover"
-                        title={p.name}
-                      />
-                    ))}
-                {Array.isArray(meetup.participants) &&
-                  meetup.participants.length > 5 && (
-                    <span className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-200 text-xs font-semibold border-2 border-white">
-                      +{meetup.participants.length - 5}
-                    </span>
-                  )}
-              </div>
-            </div>
-            {/* List participant names below avatars */}
-            {Array.isArray(meetup.participants) &&
-              meetup.participants.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {meetup.participants.map((p, idx) => (
-                    <span
-                      key={p.id || idx}
-                      className="bg-gray-100 px-2 py-1 rounded-full text-xs text-gray-700 flex items-center gap-1"
-                    >
-                      <img
-                        src={p.image || "/images/icon.png"}
-                        alt={p.name}
-                        className="w-5 h-5 rounded-full object-cover inline-block"
-                      />
-                      {p.name}
-                    </span>
-                  ))}
-                </div>
-              )}
-            <div className="flex items-center gap-2 text-gray-700">
-              {meetup.isPublic ? (
-                <HiLockOpen className="w-5 h-5 text-green-500" />
-              ) : (
-                <HiLockClosed className="w-5 h-5 text-red-500" />
-              )}
-              <span className="capitalize">
-                {meetup.isPublic ? "public" : "private"}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <span
-                className={`inline-block px-3 py-1 rounded-full text-white text-xs ${
-                  meetup.status === "active"
-                    ? "bg-green-500"
-                    : meetup.status === "cancelled"
-                    ? "bg-red-500"
-                    : "bg-gray-400"
-                }`}
-              >
-                {meetup.status.charAt(0).toUpperCase() + meetup.status.slice(1)}
-              </span>
-            </div>
-            {meetup.categories && meetup.categories.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {meetup.categories.map((cat, idx) => (
-                  <span
-                    key={cat + idx}
-                    className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs"
-                  >
-                    {cat}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
+          <MeetupDetailsInfo meetup={meetup} />
+          <MeetupParticipants participants={meetup.participants} />
           <div className="flex gap-2 mt-6 justify-end">
             <button
               onClick={() => setShowChat((prev) => !prev)}
@@ -392,23 +293,12 @@ export default function MeetupDetailsPage() {
                 </button>
               </>
             ) : (
-              <button
-                onClick={handleRSVP}
-                className={`px-4 py-2 rounded transition-colors ${
-                  isParticipant
-                    ? "bg-gray-400 text-white cursor-not-allowed"
-                    : "bg-green-600 text-white hover:bg-green-700"
-                }`}
-                disabled={Boolean(rsvpLoading || !user || isParticipant)}
-              >
-                {rsvpLoading ? (
-                  <LoadingSpinner size={18} />
-                ) : isParticipant ? (
-                  "Joined"
-                ) : (
-                  "RSVP / Join Meetup"
-                )}
-              </button>
+              <RSVPButton
+                isOwner={!!isOwner}
+                isParticipant={!!isParticipant}
+                rsvpLoading={rsvpLoading}
+                onRSVP={handleRSVP}
+              />
             )}
           </div>
           {showChat && user && (

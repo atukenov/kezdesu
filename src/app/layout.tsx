@@ -1,9 +1,9 @@
-import { AuthProvider } from "@/components/AuthProvider";
-import IntlProvider from "@/components/IntlProvider";
-import { LocaleProvider } from "@/components/LocaleProvider";
-import Navigation from "@/components/Navigation";
-import Notification from "@/components/Notification";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import Navigation from "@/components/navigation/Navigation";
+import Notification from "@/components/notification/Notification";
+import { AuthProvider } from "@/components/providers/AuthProvider";
+import IntlProvider from "@/components/providers/IntlProvider";
+import { LocaleProvider } from "@/components/providers/LocaleProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import type { Metadata } from "next";
 import { Manrope, Source_Sans_3 } from "next/font/google";
 import "./globals.css";

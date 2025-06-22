@@ -1,8 +1,8 @@
 "use client";
 
-import { useAuth } from "@/components/AuthProvider";
-import CreateMeetupDialog from "@/components/CreateMeetupDialog";
-import MeetupCard from "@/components/MeetupCard";
+import CreateMeetupDialog from "@/components/meetup/CreateMeetupDialog";
+import MeetupCard from "@/components/meetup/MeetupCard";
+import { useAuth } from "@/components/providers/AuthProvider";
 import { MeetupModel } from "@/models/MeetupModel";
 import {
   archiveMeetup,
