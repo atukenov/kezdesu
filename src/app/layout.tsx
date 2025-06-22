@@ -1,9 +1,9 @@
 import { AuthProvider } from "@/components/AuthProvider";
 import Navigation from "@/components/Navigation";
 import Notification from "@/components/Notification";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import type { Metadata } from "next";
 import { Manrope, Source_Sans_3 } from "next/font/google";
-import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const manrope = Manrope({ subsets: ["latin"] });
@@ -23,6 +23,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#2563eb" />
         <title>Kezdesu</title>
         <meta
           name="viewport"
@@ -30,11 +32,13 @@ export default function RootLayout({
         />
       </head>
       <body className={sourceSans.className}>
-        <AuthProvider>
-          <Navigation />
-          <main className="min-h-screen pt-16">{children}</main>
-          <Notification />
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <Navigation />
+            <main className="min-h-screen pt-16">{children}</main>
+            <Notification />
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

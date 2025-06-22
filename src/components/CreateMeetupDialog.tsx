@@ -29,7 +29,9 @@ export default function CreateMeetupDialog({
     time: "",
     isPublic: true,
     maxParticipants: undefined as number | undefined,
+    categories: [] as string[], // New: categories/tags
   });
+  const [categoryInput, setCategoryInput] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,6 +134,58 @@ export default function CreateMeetupDialog({
                         : undefined,
                     })
                   }
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Categories/Tags
+                </label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {formData.categories.map((cat, idx) => (
+                    <span
+                      key={cat + idx}
+                      className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs flex items-center gap-1"
+                    >
+                      {cat}
+                      <button
+                        type="button"
+                        className="ml-1 text-blue-500 hover:text-red-500"
+                        onClick={() =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            categories: prev.categories.filter(
+                              (c) => c !== cat
+                            ),
+                          }))
+                        }
+                        aria-label={`Remove ${cat}`}
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <input
+                  type="text"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="Add a category and press Enter"
+                  value={categoryInput}
+                  onChange={(e) => setCategoryInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (
+                      e.key === "Enter" &&
+                      categoryInput.trim() &&
+                      !formData.categories.includes(categoryInput.trim())
+                    ) {
+                      e.preventDefault();
+                      setFormData((prev) => ({
+                        ...prev,
+                        categories: [...prev.categories, categoryInput.trim()],
+                      }));
+                      setCategoryInput("");
+                    }
+                  }}
                 />
               </div>
 

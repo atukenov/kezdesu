@@ -5,7 +5,6 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { getDatabase } from "firebase/database";
 import { doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -21,7 +20,6 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const rtdb = getDatabase(app);
 
 // Authentication providers
 const googleProvider = new GoogleAuthProvider();

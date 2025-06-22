@@ -1,13 +1,11 @@
 "use client";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { rtdb } from "@/lib/firebase";
+import { reactToMeetup, subscribeToMeetup } from "@/services/meetupService";
 import type { Meetup, User } from "@/types";
 import { formatDistanceToNow } from "date-fns";
-import { off, onValue, ref } from "firebase/database";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
-  HiChatAlt,
   HiLocationMarker,
   HiLockClosed,
   HiLockOpen,
@@ -34,38 +32,40 @@ export default function MeetupCard({
   const [status, setStatus] = useState(meetup.status);
   const [showChat, setShowChat] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [reactions, setReactions] = useState(meetup.reactions || {});
 
   useEffect(() => {
-    // Subscribe to participants updates
-    const participantsRef = ref(rtdb, `meetups/${meetup.id}/participants`);
-    onValue(participantsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setParticipants(Object.values(data));
-      }
-    });
-
-    // Subscribe to status updates
-    const statusRef = ref(rtdb, `meetups/${meetup.id}/status`);
-    onValue(statusRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setStatus(data);
-      }
-    });
-
+    // Subscribe to single meetup for real-time updates
+    let unsub: (() => void) | undefined;
+    if (meetup.id) {
+      unsub = subscribeToMeetup(meetup.id, (data) => {
+        setParticipants(data.participants || []);
+        setStatus(data.status);
+        setReactions(data.reactions || {});
+      });
+    }
     return () => {
-      // Cleanup subscriptions
-      off(participantsRef);
-      off(statusRef);
+      if (unsub) unsub();
     };
   }, [meetup.id]);
 
   const isOwner = meetup.creatorId === currentUser.id;
   const isParticipant = participants.some((p: any) => p.id === currentUser.id);
 
+  // Emoji reactions UI
+  const EMOJIS = ["👍", "🎉", "😂", "🔥", "❤️", "😮"];
+  const handleReaction = async (emoji: string) => {
+    if (!currentUser) return;
+    await reactToMeetup(meetup.id, emoji, currentUser.id);
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div
+      className="bg-white rounded-lg shadow p-4 cursor-pointer hover:shadow-lg transition-shadow"
+      onClick={() => {
+        window.location.href = `/meetups/${meetup.id}`;
+      }}
+    >
       {meetup.imageUrl && (
         <div className="relative h-48 w-full">
           <Image
@@ -85,6 +85,18 @@ export default function MeetupCard({
             <HiLockClosed className="text-red-500" />
           )}
         </div>
+        {meetup.categories && meetup.categories.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {meetup.categories.map((cat: string, idx: number) => (
+              <span
+                key={cat + idx}
+                className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs"
+              >
+                {cat}
+              </span>
+            ))}
+          </div>
+        )}
 
         <div className="flex items-center text-gray-600 mb-2">
           <HiLocationMarker className="mr-1" />
@@ -97,23 +109,63 @@ export default function MeetupCard({
             {participants.length}
             {meetup.maxParticipants && ` / ${meetup.maxParticipants}`}
           </span>
+          {/* Show participant avatars (up to 5) */}
+          <div className="flex ml-2 -space-x-2">
+            {participants.slice(0, 5).map((p: any, idx: number) => (
+              <img
+                key={p.id || idx}
+                src={p.image || "/images/icon.png"}
+                alt={p.name}
+                className="w-7 h-7 rounded-full border-2 border-white shadow-sm bg-gray-100 object-cover"
+                title={p.name}
+              />
+            ))}
+            {participants.length > 5 && (
+              <span className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-200 text-xs font-semibold border-2 border-white">
+                +{participants.length - 5}
+              </span>
+            )}
+          </div>
         </div>
 
         {meetup.description && (
           <p className="text-gray-600 mb-4">{meetup.description}</p>
         )}
 
+        {/* Emoji reactions */}
+        <div className="flex gap-2 mb-2">
+          {EMOJIS.map((emoji) => {
+            const users = reactions[emoji] || [];
+            const reacted = users.includes(currentUser.id);
+            return (
+              <button
+                key={emoji}
+                onClick={() => handleReaction(emoji)}
+                className={`flex items-center px-2 py-1 rounded-full text-lg border transition-colors
+                  ${
+                    reacted
+                      ? "bg-blue-100 border-blue-400"
+                      : "bg-gray-100 border-gray-200 hover:bg-blue-50"
+                  }
+                `}
+                aria-label={`React with ${emoji}`}
+              >
+                <span>{emoji}</span>
+                {users.length > 0 && (
+                  <span className="ml-1 text-xs text-gray-600">
+                    {users.length}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
         <div className="flex items-center justify-between mt-4">
           <span className="text-sm text-gray-500">
             {formatDistanceToNow(new Date(meetup.time), { addSuffix: true })}
           </span>
           <div className="flex gap-2">
-            <button
-              onClick={() => setShowChat(!showChat)}
-              className="px-3 py-1 text-blue-500 hover:bg-blue-50 rounded-md transition-colors"
-            >
-              <HiChatAlt className="w-5 h-5" />
-            </button>
             {isOwner && onEdit && (
               <button
                 onClick={async () => {
