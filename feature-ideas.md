@@ -99,7 +99,7 @@
 
 - **Offline Mode:** Allow limited app usage when offline (view cached meetups, etc.).
 - **Customizable Notifications:** Let users choose which notifications they receive.
-- **Multi-language Support Expansion:** Add more languages and allow community translations.
+- [Done] **Multi-language Support Expansion:** Add more languages and allow community translations.
 - **Performance Optimizations:** Lazy load images, optimize bundle size, etc.
 - **Comprehensive Accessibility Audit:** Ensure full WCAG compliance.
 
