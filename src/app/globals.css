@@ -5,8 +5,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --primary: #f936e9;
-  --secondary: #e6e6fa;
+
+  --primary: #ff6b4a;
+  --secondary: #fff2e1;
+  --accent: #5b4eff;
+  --success: #59d890;
+  --danger: #f2545b;
+  --text: #2b2b2b;
 
   --primary-accent: #ff7b91;
   --foreground-accent: #333333;
