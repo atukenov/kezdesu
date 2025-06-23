@@ -73,6 +73,8 @@
   "emoji": "Emoji",
   "reply": "Reply",
   "editProfile": "Edit Profile",
+  "noBio": "No bio available.",
+  "noSocialLinks": "No social links available.",
   "upload": "Upload",
   "change": "Change",
   "removePhoto": "Remove Photo",
@@ -211,5 +213,6 @@
     "downloadData": "Download My Data",
     "deleteAccount": "Delete My Account",
     "language": "Language"
-  }
+  },
+  "feedbacks": "Feedbacks"
 }

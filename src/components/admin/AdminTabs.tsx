@@ -5,7 +5,7 @@ interface AdminTabsProps {
   onTabChange: (tab: string) => void;
 }
 
-const tabKeys = ["users", "meetups", "reports"];
+const tabKeys = ["users", "meetups", "reports", "feedbacks"];
 
 export default function AdminTabs({ activeTab, onTabChange }: AdminTabsProps) {
   const t = useTranslations();

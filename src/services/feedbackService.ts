@@ -1,9 +1,11 @@
 import { db } from "@/lib/firebase";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, getDocs, orderBy, query, serverTimestamp } from "firebase/firestore";
 
 export interface Feedback {
+  id: string;
   message: string;
   email?: string;
+  createdAt?: any;
 }
 
 export async function submitFeedback({
@@ -18,4 +20,10 @@ export async function submitFeedback({
     email: email || null,
     createdAt: serverTimestamp(),
   });
+}
+
+export async function getFeedbacks(): Promise<Feedback[]> {
+  const q = query(collection(db, "feedback"), orderBy("createdAt", "desc"));
+  const snap = await getDocs(q);
+  return snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Feedback));
 }

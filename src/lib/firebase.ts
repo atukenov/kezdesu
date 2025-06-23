@@ -1,24 +1,14 @@
 import { initializeApp } from "firebase/app";
 import {
+  browserLocalPersistence,
   getAuth,
   GoogleAuthProvider,
+  setPersistence,
+  signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  setPersistence,
-  browserLocalPersistence,
 } from "firebase/auth";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  collection,
-  getDocs,
-  query,
-  where,
-  deleteDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -54,6 +44,16 @@ export const signOutUser = async () => {
     await signOut(auth);
   } catch (error) {
     console.error("Error signing out:", error);
+    throw error;
+  }
+};
+
+export const signInWithEmail = async (email: string, password: string) => {
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    return result.user;
+  } catch (error) {
+    console.error("Error signing in with email:", error);
     throw error;
   }
 };

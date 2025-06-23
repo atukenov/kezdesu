@@ -9,6 +9,7 @@ import {
   getUsers,
   updateUserRole,
 } from "@/services/userService";
+import { getFeedbacks, Feedback } from "@/services/feedbackService";
 import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -24,6 +25,9 @@ const AdminReportsTable = dynamic(
 const AdminTabs = dynamic(() => import("@/components/admin/AdminTabs"));
 const AdminUsersTable = dynamic(
   () => import("@/components/admin/AdminUsersTable")
+);
+const AdminFeedbacksTable = dynamic(
+  () => import("@/components/admin/AdminFeedbacksTable")
 );
 
 const ADMIN_EMAILS = [
@@ -50,6 +54,9 @@ export default function AdminDashboard() {
   const [reports, setReports] = useState<ReportModel[]>([]);
   const [reportsLoading, setReportsLoading] = useState(false);
   const [reportsError, setReportsError] = useState("");
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const [feedbacksLoading, setFeedbacksLoading] = useState(false);
+  const [feedbacksError, setFeedbacksError] = useState("");
 
   useEffect(() => {
     if (!loading && (!user || !ADMIN_EMAILS.includes(user.email))) {
@@ -72,6 +79,17 @@ export default function AdminDashboard() {
         .then(setReports)
         .catch((e) => setReportsError(e.message || "Failed to load reports."))
         .finally(() => setReportsLoading(false));
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (activeTab === "feedbacks") {
+      setFeedbacksLoading(true);
+      setFeedbacksError("");
+      getFeedbacks()
+        .then(setFeedbacks)
+        .catch((e) => setFeedbacksError(e.message || "Failed to load feedbacks"))
+        .finally(() => setFeedbacksLoading(false));
     }
   }, [activeTab]);
 
@@ -303,6 +321,13 @@ export default function AdminDashboard() {
               </>
             )}
           </div>
+        )}
+        {activeTab === "feedbacks" && (
+          <AdminFeedbacksTable
+            feedbacks={feedbacks}
+            loading={feedbacksLoading}
+            error={feedbacksError}
+          />
         )}
       </div>
     </div>

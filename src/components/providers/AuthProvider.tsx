@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             id: firebaseUser.uid,
             name: firebaseUser.displayName || "Anonymous",
             email: firebaseUser.email || "",
-            image: firebaseUser.photoURL || "/default-avatar.png",
+            image: firebaseUser.photoURL || "/images/default-avatar.jpg",
             status: "available",
             bio: "",
             social: {},

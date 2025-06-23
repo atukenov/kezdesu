@@ -95,6 +95,9 @@
   "meetupChat": "Чат встречи",
   "reactedWith": "Отреагировал(а) {emoji}",
   "name": "Имя",
+  "editProfile": "Редактировать профиль",
+  "noBio": "Нет биографии",
+  "noSocialLinks": "Нет социальных ссылок",
   "descriptionPlaceholder": "Опишите вашу встречу...",
   "meetupDetails": "Детали встречи",
   "meetupTime": "Время встречи",
@@ -210,5 +213,6 @@
     "downloadData": "Скачать мои данные",
     "deleteAccount": "Удалить мой аккаунт",
     "language": "Язык"
-  }
+  },
+  "feedbacks": "Отзывы"
 }
