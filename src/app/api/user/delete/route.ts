@@ -1,4 +1,3 @@
-import { authOptions } from "@/lib/authOptions";
 import { db } from "@/lib/firebase";
 import {
   collection,
@@ -8,15 +7,14 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
+  // Accept userId from request body (must be securely validated client-side)
+  const { userId } = await req.json();
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const userId = session.user.id;
 
   // Delete user profile
   await deleteDoc(doc(db, "users", userId));
@@ -36,9 +34,9 @@ export async function POST(req: NextRequest) {
     if (Array.isArray(data.participants)) {
       const filtered = data.participants.filter((p: any) => p.id !== userId);
       if (filtered.length !== data.participants.length) {
-        await deleteDoc(meetup.ref); // fallback: delete the meetup if user was a participant (or use updateDoc if you want to keep the meetup)
         // To update without deleting, use:
         // await updateDoc(meetup.ref, { participants: filtered });
+        await deleteDoc(meetup.ref); // fallback: delete the meetup if user was a participant
       }
     }
   }
