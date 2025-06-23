@@ -7,30 +7,36 @@
 :root {
   --background: #f9fafb;
   --foreground: #18181b;
-  --primary: #5b4eff;
-  --primary-accent: #7c3aed;
-  --secondary: #fff2e1;
-  --accent: #ff6b4a;
-  --success: #22c55e;
-  --danger: #ef4444;
+  --primary: var(--color-primary, #5b4eff);
+  --accent: var(--color-accent, #ff6b4a);
+  --success: var(--color-success, #22c55e);
+  --danger: var(--color-danger, #ef4444);
+  --primary-accent: var(--color-primary-accent, #7c3aed);
+  --secondary: var(--color-secondary, #fff2e1);
   --text: var(--foreground); /* Deprecated, use --foreground instead */
-  --foreground-accent: #6366f1;
-  --hero-background: #f3f3f5;
+  --foreground-accent: var(--color-foreground-accent, #6366f1);
+  --hero-background: var(--color-hero-background, #f3f3f5);
   --font-title: "Urbanist", system-ui, sans-serif;
+  transition: --primary 0.3s, --accent 0.3s, --success 0.3s, --danger 0.3s,
+    --primary-accent 0.3s, --secondary 0.3s, --foreground-accent 0.3s,
+    --hero-background 0.3s;
 }
 
 .dark {
   --background: #18181b;
   --foreground: #f9fafb;
-  --primary: #a5b4fc;
-  --primary-accent: #818cf8;
-  --secondary: #27272a;
-  --accent: #fca5a5;
-  --success: #4ade80;
-  --danger: #f87171;
+  --primary: var(--color-primary, #a5b4fc);
+  --accent: var(--color-accent, #fca5a5);
+  --success: var(--color-success, #4ade80);
+  --danger: var(--color-danger, #f87171);
+  --primary-accent: var(--color-primary-accent, #818cf8);
+  --secondary: var(--color-secondary, #27272a);
   --text: #e5e7eb;
-  --foreground-accent: #c7d2fe;
-  --hero-background: #232336;
+  --foreground-accent: var(--color-foreground-accent, #c7d2fe);
+  --hero-background: var(--color-hero-background, #232336);
+  transition: --primary 0.3s, --accent 0.3s, --success 0.3s, --danger 0.3s,
+    --primary-accent 0.3s, --secondary 0.3s, --foreground-accent 0.3s,
+    --hero-background 0.3s;
 }
 
 html {

@@ -4,7 +4,9 @@ import { AuthProvider } from "@/components/providers/AuthProvider";
 import IntlProvider from "@/components/providers/IntlProvider";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import FeedbackWidget from "@/components/shared/FeedbackWidget";
 import InstallPwaButton from "@/components/shared/InstallPwaButton";
+import OfflineBanner from "@/components/shared/OfflineBanner";
 import type { Metadata } from "next";
 import { Manrope, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
@@ -39,7 +41,9 @@ export default function RootLayout({
           <AuthProvider>
             <LocaleProvider>
               <IntlProvider>
+                <OfflineBanner />
                 <Navigation />
+                <FeedbackWidget />
                 <InstallPwaButton />
                 <main className="min-h-screen pt-16">{children}</main>
                 <Notification />

@@ -12,8 +12,7 @@ import {
   HiHome,
   HiLogout,
   HiMenu,
-  HiMoon,
-  HiSun,
+  HiSparkles,
   HiUserCircle,
   HiX,
 } from "react-icons/hi";
@@ -44,6 +43,7 @@ const Navigation = () => {
     { href: "/", label: t("navigation.recentMeetups"), icon: HiHome },
     { href: "/meetups", label: t("navigation.myMeetups"), icon: HiCalendar },
     { href: "/profile", label: t("navigation.profile"), icon: HiUserCircle },
+    { href: "/whats-new", label: t("navigation.whatsNew"), icon: HiSparkles },
   ];
 
   // Only show admin button if user is admin
@@ -114,19 +114,21 @@ const Navigation = () => {
                 {t("navigation.adminDashboard")}
               </Link>
             )}
-            <LanguageSwitcher />
-            <button
-              onClick={toggleTheme}
-              className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-foreground hover:text-primary hover:bg-secondary transition-colors"
-              aria-label={t("navigation.theme")}
+            <Link
+              href="/settings"
+              className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                pathname === "/settings"
+                  ? "text-primary bg-secondary"
+                  : "text-foreground hover:text-primary hover:bg-secondary dark:text-foreground dark:hover:text-primary dark:hover:bg-secondary"
+              }`}
+              aria-label={t("navigation.settings", { default: "Settings" })}
             >
-              {theme === "dark" ? (
-                <HiSun className="w-5 h-5 mr-1" />
-              ) : (
-                <HiMoon className="w-5 h-5 mr-1" />
-              )}
-              {theme === "dark" ? t("navigation.light") : t("navigation.dark")}
-            </button>
+              <span className="w-5 h-5 mr-1" role="img" aria-label="Settings">
+                ⚙️
+              </span>
+              {t("navigation.settings", { default: "Settings" })}
+            </Link>
+            <LanguageSwitcher />
             <button
               onClick={handleSignOut}
               className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-danger hover:bg-danger/10 transition-colors"
@@ -155,23 +157,20 @@ const Navigation = () => {
         {/* Mobile menu */}
         {isMenuOpen && (
           <div ref={menuRef} className="md:hidden">
-            {/* Language and dark mode controls at the top, separated visually */}
+            {/* Language control only, removed dark mode toggle */}
             <div className="flex flex-col gap-2 px-2 pt-4 pb-2 border-b border-foreground-accent mb-2 bg-background">
               <LanguageSwitcher />
-              <button
-                onClick={toggleTheme}
-                className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-foreground hover:text-primary hover:bg-secondary transition-colors"
-                aria-label={t("navigation.theme")}
+              <Link
+                href="/settings"
+                className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-foreground hover:text-primary hover:bg-secondary dark:text-foreground dark:hover:text-primary dark:hover:bg-secondary"
+                aria-label={t("navigation.settings", { default: "Settings" })}
+                onClick={() => setIsMenuOpen(false)}
               >
-                {theme === "dark" ? (
-                  <HiSun className="w-5 h-5 mr-2" />
-                ) : (
-                  <HiMoon className="w-5 h-5 mr-2" />
-                )}
-                {theme === "dark"
-                  ? t("navigation.light")
-                  : t("navigation.dark")}
-              </button>
+                <span className="w-5 h-5 mr-2" role="img" aria-label="Settings">
+                  ⚙️
+                </span>
+                {t("navigation.settings", { default: "Settings" })}
+              </Link>
             </div>
             <div className="px-2 pt-2 pb-3 space-y-1 bg-background">
               {navItems.map((item) => (

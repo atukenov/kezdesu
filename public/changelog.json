@@ -1,0 +1,49 @@
+[
+  {
+    "version": "1.5.0",
+    "date": "2025-06-23",
+    "title": "Feedback Widget & Offline Mode",
+    "items": [
+      "Added floating feedback widget for user feedback and bug reports.",
+      "Offline mode: view cached meetups when offline.",
+      "Performance optimizations: dynamic imports, lazy loading."
+    ]
+  },
+  {
+    "version": "1.4.0",
+    "date": "2025-06-15",
+    "title": "Admin & Moderation Enhancements",
+    "items": [
+      "Admin can change user roles.",
+      "Bulk actions and audit logs groundwork.",
+      "Improved i18n for admin dashboard."
+    ]
+  },
+  {
+    "version": "1.6.0",
+    "date": "2025-06-23",
+    "title": "Major Refactor, PWA, GDPR/CCPA, and More",
+    "items": [
+      "Massive refactor: modularized all components into domain-specific folders for maintainability and scalability.",
+      "Unified avatar rendering and improved accessibility across the app.",
+      "Full i18n support for admin, moderation, and user features (English/Russian).",
+      "Semantic color palette and dark mode improvements.",
+      "RSVP and 'Add to Calendar' features for meetups.",
+      "Admin Dashboard: tabs for Users, Meetups, and Reports, with moderation actions (resolve, dismiss, escalate).",
+      "User reporting: flag icon, modal, Firestore integration, error handling.",
+      "Shared confirmation and error dialogs for admin/user actions.",
+      "User management: admins can change user roles (with Firestore integration).",
+      "PWA: manifest, service worker, install prompt, and offline mode (caching meetups and static assets).",
+      "Offline banner for users when offline.",
+      "Performance: dynamic imports for heavy admin components, image optimization confirmed.",
+      "FeedbackWidget: floating button, modal, Firestore integration, i18n.",
+      "'What's New' page with changelog and navigation item.",
+      "ThemeCustomizer: users can pick accent colors, persisted in localStorage.",
+      "Settings page: theme, dark mode, language selector, and user data controls.",
+      "GDPR/CCPA: 'Download My Data' and 'Delete My Account' (with backend endpoints).",
+      "Language and theme preferences persisted in localStorage.",
+      "Custom ThemeProvider and LocaleProvider for correct hydration and toggling.",
+      "Vercel environment variable setup instructions added."
+    ]
+  }
+]

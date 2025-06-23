@@ -108,7 +108,7 @@ export default function ProfilePage() {
   return (
     <div className="max-w-md mx-auto mt-10 bg-background rounded-xl shadow-lg p-8 flex flex-col items-center border border-foreground-accent">
       <h2 className="text-2xl font-bold mb-4 text-foreground">
-        {t("profile")}
+        {t("navigation.profile")}
       </h2>
       <ProfileAvatar image={profile.image} />
       <ProfileStatusToggle

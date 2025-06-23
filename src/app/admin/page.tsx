@@ -1,8 +1,4 @@
 "use client";
-import AdminReportsTable from "@/components/admin/AdminReportsTable";
-import AdminTabs from "@/components/admin/AdminTabs";
-import AdminUserDetailModal from "@/components/admin/AdminUserDetailModal";
-import AdminUsersTable from "@/components/admin/AdminUsersTable";
 import { useAuth } from "@/components/providers/AuthProvider";
 import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import ErrorDialog from "@/components/shared/ErrorDialog";
@@ -14,8 +10,21 @@ import {
   updateUserRole,
 } from "@/services/userService";
 import { useTranslations } from "next-intl";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+const AdminUserDetailModal = dynamic(
+  () => import("@/components/admin/AdminUserDetailModal"),
+  { ssr: false }
+);
+const AdminReportsTable = dynamic(
+  () => import("@/components/admin/AdminReportsTable")
+);
+const AdminTabs = dynamic(() => import("@/components/admin/AdminTabs"));
+const AdminUsersTable = dynamic(
+  () => import("@/components/admin/AdminUsersTable")
+);
 
 const ADMIN_EMAILS = [
   "almaz.t97@gmail.com", // Replace with your admin email(s)

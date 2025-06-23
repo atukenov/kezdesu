@@ -64,7 +64,6 @@
   "noResults": "No results found.",
   "invite": "Invite",
   "copied": "Copied!",
-  "settings": "Settings",
   "language": "Language",
   "theme": "Theme",
   "notifications": "Notifications",
@@ -185,6 +184,32 @@
     "signOut": "Sign Out",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "adminDashboard": "Admin Dashboard"
+    "adminDashboard": "Admin Dashboard",
+    "whatsNew": "What's New",
+    "settings": "Settings"
+  },
+  "feedback": {
+    "open": "Open feedback form",
+    "close": "Close feedback form",
+    "title": "Send Feedback or Report a Bug",
+    "placeholder": "Your feedback or bug report...",
+    "emailPlaceholder": "Your email (optional)",
+    "submit": "Send",
+    "submitting": "Sending...",
+    "success": "Thank you for your feedback!",
+    "error": "Failed to send feedback. Please try again."
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "accentColor": "Accent Color",
+    "privacy": "Privacy & Data",
+    "downloadData": "Download My Data",
+    "deleteAccount": "Delete My Account",
+    "language": "Language"
   }
 }

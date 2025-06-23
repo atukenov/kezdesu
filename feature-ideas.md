@@ -9,9 +9,9 @@
 - **User Badges & Achievements:** Reward active users with badges or achievements.
 - **User Activity Feed:** Show a timeline of user actions (joined meetups, posted messages, etc.).
 - **Profile Privacy Controls:** Let users control what info is public/private.
-- **Account Deletion/Export:** Allow users to delete or export their account/data.
+- [Done] **Account Deletion/Export:** Allow users to delete or export their account/data.
 - **Custom Avatars/Icons:** Let users choose from a set of avatars or upload their own.
-- **User Preferences:** Let users customize notification, language, and theme settings.
+- [In Progress] **User Preferences:** Let users customize notification, language, and theme settings.
 
 ---
 
@@ -83,24 +83,24 @@
 ## 6. Quality of Life
 
 - [Done] **Dark Mode:** Add a dark/light theme toggle.
-- [In Progress] **Progressive Web App (PWA):** Make the app installable and offline-friendly.
+- [Done] **Progressive Web App (PWA):** Make the app installable and offline-friendly.
 - **Accessibility Improvements:** Ensure the app is accessible to all users (ARIA, keyboard navigation, etc.).
-- **Offline Mode:** Allow limited app usage when offline (view cached meetups, etc.).
+- [Done] **Offline Mode:** Allow limited app usage when offline (view cached meetups, etc.).
 - **Customizable Notifications:** Let users choose which notifications they receive.
 - [Done] **Multi-language Support Expansion:** Add more languages and allow community translations.
-- **Performance Optimizations:** Lazy load images, optimize bundle size, etc.
+- [Done] **Performance Optimizations:** Lazy load images, optimize bundle size, etc.
 - **Comprehensive Accessibility Audit:** Ensure full WCAG compliance.
 - **User Onboarding/Tutorial:** Guide new users through the app features.
-- **Feedback Widget:** Allow users to submit feedback or bug reports.
-- **Changelog/What's New:** Show recent updates and new features.
-- **Keyboard Shortcuts:** Add shortcuts for power users.
-- **Theme Customization:** Let users pick accent colors or themes.
+- [Done] **Feedback Widget:** Allow users to submit feedback or bug reports.
+- [Done] **Changelog/What's New:** Show recent updates and new features.
+- [Web] **Keyboard Shortcuts:** Add shortcuts for power users.
+- [Done] **Theme Customization:** Let users pick accent colors or themes.
 
 ---
 
 ## 7. Security & Privacy
 
-- **GDPR/CCPA Compliance:** Ensure user data privacy and export/deletion rights.
+- [Done] **GDPR/CCPA Compliance:** Ensure user data privacy and export/deletion rights.
 - **Session Management:** Let users see and revoke active sessions/devices.
 - **Suspicious Activity Alerts:** Notify users/admins of unusual account activity.
 - **Encrypted Messaging:** End-to-end encryption for private messages.
