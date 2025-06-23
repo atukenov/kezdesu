@@ -4,8 +4,21 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
+  setPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
-import { doc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  deleteDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -19,6 +32,7 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+setPersistence(auth, browserLocalPersistence); // Ensure session persists
 export const db = getFirestore(app);
 
 // Authentication providers

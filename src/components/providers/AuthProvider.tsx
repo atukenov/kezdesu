@@ -23,6 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      console.log("onAuthStateChanged:", firebaseUser); // DEBUG
       if (firebaseUser) {
         // Try to get Firestore user profile
         let userProfile = await getUser(firebaseUser.uid);
@@ -39,6 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           };
           await createOrUpdateUser(userProfile);
         }
+        console.log("User profile:", userProfile); // DEBUG
         setUser(userProfile);
       } else {
         setUser(null);
