@@ -8,7 +8,11 @@ import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import ErrorDialog from "@/components/shared/ErrorDialog";
 import { UserModel } from "@/models/UserModel";
 import { getReports, ReportModel } from "@/services/reportService";
-import { createOrUpdateUser, getUsers } from "@/services/userService";
+import {
+  createOrUpdateUser,
+  getUsers,
+  updateUserRole,
+} from "@/services/userService";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -183,6 +187,21 @@ export default function AdminDashboard() {
     setConfirmOpen(true);
   };
 
+  const handleRoleChange = async (user: UserModel, newRole: string) => {
+    setUpdating(true);
+    try {
+      await updateUserRole(user.id, newRole);
+      setUsers((prev) =>
+        prev.map((u) => (u.id === user.id ? { ...u, role: newRole } : u))
+      );
+    } catch (e: any) {
+      setErrorMessage(e.message || t("admin.users.roleChangeError"));
+      setErrorOpen(true);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   // Only show loading overlay for user actions, not for report mod actions
   const showUserUpdating = updating && activeTab === "users";
 
@@ -207,6 +226,7 @@ export default function AdminDashboard() {
               onView={handleViewUser}
               onBan={handleBanUser}
               onUnban={handleUnbanUser}
+              onRoleChange={handleRoleChange}
             />
             <AdminUserDetailModal
               user={selectedUser}

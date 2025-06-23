@@ -165,7 +165,13 @@
       "unban": "Разблокировать",
       "status_active": "Активен",
       "status_busy": "Забанен",
-      "status_available": "Доступен"
+      "status_available": "Доступен",
+      "role": "Роль",
+      "changeRole": "Изменить роль",
+      "role_user": "Пользователь",
+      "role_admin": "Админ",
+      "role_moderator": "Модератор",
+      "roleChangeError": "Не удалось изменить роль пользователя. Пожалуйста, попробуйте еще раз."
     }
   },
   "navigation": {

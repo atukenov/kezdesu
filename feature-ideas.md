@@ -74,7 +74,7 @@
 - **Analytics Dashboard:** Provide stats on user growth, engagement, and meetup activity.
 - **Custom Roles/Permissions:** Allow for moderators, organizers, etc.
 - **Content Moderation Queue:** Review reported content before removal.
-- **User Ban/Suspension:** Temporarily or permanently ban users.
+- [Done] **User Ban/Suspension:** Temporarily or permanently ban users.
 - **Audit Logs:** Track admin/moderator actions.
 - **Bulk Actions:** Approve, delete, or update multiple meetups/users at once.
 

@@ -1,5 +1,5 @@
 {
-  "name": "Kezdesu",
+  "name": "KZDSU",
   "short_name": "Kezdesu",
   "description": "Spontaneous meetups made easy!",
   "start_url": "/",
@@ -8,12 +8,12 @@
   "theme_color": "#2563eb",
   "icons": [
     {
-      "src": "/images/icon.png",
+      "src": "/images/logo.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/images/icon.png",
+      "src": "/images/logo.png",
       "sizes": "512x512",
       "type": "image/png"
     }

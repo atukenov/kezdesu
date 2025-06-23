@@ -166,7 +166,13 @@
       "unban": "Unban",
       "status_active": "Active",
       "status_busy": "Banned",
-      "status_available": "Available"
+      "status_available": "Available",
+      "role": "Role",
+      "changeRole": "Change Role",
+      "role_user": "User",
+      "role_admin": "Admin",
+      "role_moderator": "Moderator",
+      "roleChangeError": "Failed to change user role. Please try again."
     }
   },
   "navigation": {

@@ -10,6 +10,7 @@ import {
   onSnapshot,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 
@@ -55,4 +56,17 @@ export async function getUsers(
   return snap.docs.map((doc) =>
     toUserModel(Object.assign({ id: doc.id }, doc.data()))
   );
+}
+
+/**
+ * Update a user's role in Firestore
+ * @param userId The user's ID
+ * @param newRole The new role to assign (e.g., 'admin', 'user', 'moderator')
+ */
+export async function updateUserRole(
+  userId: string,
+  newRole: string
+): Promise<void> {
+  const userRef = doc(db, "users", userId);
+  await updateDoc(userRef, { role: newRole });
 }
